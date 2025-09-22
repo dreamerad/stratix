@@ -1,0 +1,8 @@
+*.xml
+
+config/*.xml
+logs/*.xml
+
+*.log
+*.tmp
+*.cache
