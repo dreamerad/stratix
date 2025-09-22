@@ -29,3 +29,13 @@ class RegisterServiceDTO(BaseModel):
     name: str
     password: str
     attributes: list[AccountAttribute]
+
+
+class AuthTokenDTO(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class RegisterResponseDTO(BaseModel):
+    user: AccountDTO
+    token: AuthTokenDTO

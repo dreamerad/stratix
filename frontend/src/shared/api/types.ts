@@ -15,6 +15,11 @@ export interface AuthResponse {
   token_type: string
 }
 
+export interface RegisterResponse {
+  user: User
+  token: AuthResponse
+}
+
 export interface User {
   id: number
   name: string

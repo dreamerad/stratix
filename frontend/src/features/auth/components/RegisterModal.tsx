@@ -20,7 +20,6 @@ interface RegisterForm {
 export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const { register: registerUser, error, clearError, isLoading } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [success, setSuccess] = useState(false)
 
   const {
     register,
@@ -40,21 +39,14 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
       const registerData: RegisterRequest = {
         name: data.name,
         password: data.password,
-        attributes: [] // For now, no attributes for regular users
+        attributes: []
       }
 
       await registerUser(registerData)
-      setSuccess(true)
       reset()
-
-      // Auto switch to login after 2 seconds
-      setTimeout(() => {
-        setSuccess(false)
-        onSwitchToLogin()
-      }, 2000)
+      onClose()
 
     } catch (err) {
-      // Error is handled by the store
     } finally {
       setIsSubmitting(false)
     }
@@ -63,7 +55,6 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
   const handleClose = () => {
     reset()
     clearError()
-    setSuccess(false)
     onClose()
   }
 
@@ -85,13 +76,6 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
 
         {/* Content */}
         <div className="p-6">
-          {/* Success Message */}
-          {success && (
-            <div className="mb-6 bg-green-500/10 border border-accent-green text-accent-green p-3 rounded-md text-sm text-center">
-              Account created successfully! Redirecting to login...
-            </div>
-          )}
-
           {/* Error Message */}
           {error && (
             <div className="mb-6 bg-red-500/10 border border-accent-red text-accent-red p-3 rounded-md text-sm text-center">
@@ -99,8 +83,9 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
             </div>
           )}
 
-          {/* Form */}
+          {/* Form - остальной код формы без изменений */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            {/* Все поля формы остаются такими же */}
             <div>
               <label className="block text-text-primary font-medium text-sm mb-2">
                 Username
@@ -177,10 +162,10 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
 
             <button
               type="submit"
-              disabled={isSubmitting || isLoading || success}
+              disabled={isSubmitting || isLoading}
               className="w-full bg-accent-green text-primary-bg font-semibold py-3 rounded-md hover:bg-accent-green-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Creating Account...' : success ? 'Account Created!' : 'Create Account'}
+              {isSubmitting ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 

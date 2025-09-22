@@ -50,10 +50,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isLoading: true, error: null })
 
     try {
-      const user = await authApi.register(userData)
+      const response = await authApi.register(userData)
+
+      // Сохраняем токен и данные пользователя
+      localStorage.setItem('access_token', response.token.access_token)
+
       set({
-        user,
-        isAuthenticated: false, // User needs to login after registration
+        user: response.user,
+        isAuthenticated: true,
         isLoading: false,
         error: null
       })

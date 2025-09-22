@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios'
-import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError } from './types'
+import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError, RegisterResponse } from './types'
 
 const BASE_URL = '/backend'
 
@@ -49,8 +49,8 @@ export const authApi = {
     return response.data
   },
 
-  register: async (data: RegisterRequest): Promise<User> => {
-    const response = await apiClient.post<User>('/auth/register', data)
+  register: async (data: RegisterRequest): Promise<RegisterResponse> => {
+    const response = await apiClient.post<RegisterResponse>('/auth/register', data)
     return response.data
   },
 
