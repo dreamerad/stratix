@@ -33,5 +33,16 @@ services:
     environment:
       - PYTHONPATH=/app
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "0.0.0.0:3000:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+    environment:
+      - NODE_ENV=development
+
 volumes:
   postgres_data:

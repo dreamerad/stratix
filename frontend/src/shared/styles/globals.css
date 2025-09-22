@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables */
+:root {
+  /* Colors */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
+  --bg-card: #333333;
+  --bg-card-hover: #3a3a3a;
+  --bg-modal: #2a2a2a;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-muted: #808080;
+
+  --accent-green: #00ff88;
+  --accent-green-hover: #00e676;
+  --accent-blue: #00bcd4;
+  --accent-purple: #9c27b0;
+  --accent-orange: #ff9800;
+  --accent-red: #f44336;
+
+  --border-color: #404040;
+  --border-hover: #505050;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: #ffffff;
+    background-color: #1a1a1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  a {
+    color: #00ff88;
+    text-decoration: none;
+    transition: color 150ms ease-out;
+  }
+
+  a:hover {
+    color: #00e676;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    transition: all 150ms ease-out;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #404040;
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    outline: none;
+    transition: all 150ms ease-out;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+  }
+
+  input::placeholder {
+    color: #808080;
+  }
+}

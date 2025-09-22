@@ -1,0 +1,62 @@
+import axios, { AxiosError } from 'axios'
+import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError } from './types'
+
+const BASE_URL = '/backend'
+
+export const apiClient = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+// Request interceptor to add auth token
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('access_token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+// Response interceptor to handle errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<ApiError>) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('access_token')
+      window.location.href = '/'
+    }
+    return Promise.reject(error)
+  }
+)
+
+// Auth API
+export const authApi = {
+  login: async (data: LoginRequest): Promise<AuthResponse> => {
+    const formData = new FormData()
+    formData.append('username', data.username)
+    formData.append('password', data.password)
+
+    const response = await apiClient.post<AuthResponse>('/auth/login', formData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    return response.data
+  },
+
+  register: async (data: RegisterRequest): Promise<User> => {
+    const response = await apiClient.post<User>('/auth/register', data)
+    return response.data
+  },
+
+  getCurrentUser: async (): Promise<User> => {
+    // This endpoint doesn't exist yet in backend, but we'll implement it later
+    const response = await apiClient.get<User>('/auth/me')
+    return response.data
+  },
+}
