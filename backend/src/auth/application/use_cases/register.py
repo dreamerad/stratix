@@ -4,9 +4,10 @@ from src.auth.application.interfaces.auth_uow import IAuthUnitOfWork
 from src.auth.application.interfaces.auth_provider import IAuthProvider
 from src.auth.domain.dtos import RegisterDTO, RegisterResponseDTO, AccountDTO, AuthTokenDTO
 from src.auth.domain.entities import AuthTokenData
+from src.auth.exceptions import UserAlreadyExistsException
 from src.auth.infrastructure.password_helper import PasswordHelper
 from src.core.account.entities import Account, AccountCreate
-from src.db.exceptions import DBModelConflictException
+from src.db.exceptions import DBModelNotFoundException
 
 
 class RegisterUseCase:
@@ -21,13 +22,18 @@ class RegisterUseCase:
 
         async with self.auth_uow:
             try:
-                account = await self.auth_uow.accounts.create(data)
-            except DBModelConflictException as e:
-                if "duplicate key value violates unique constraint" in str(e):
-                    raise HTTPException(status_code=409, detail="User already exists")
-                raise e
+                existing_account = await self.auth_uow.accounts.get_by_name(dto.name)
+                # Если дошли сюда - пользователь найден
+                raise UserAlreadyExistsException(dto.name)
+            except DBModelNotFoundException:
+                # Пользователь не найден - можем создавать
+                pass
+
+            # Создаем нового пользователя
+            account = await self.auth_uow.accounts.create(data)
             await self.auth_uow.commit()
 
+        # Генерируем токен
         token_data = AuthTokenData(account_id=account.id, attributes=account.attributes)
         token = self.auth_provider.generate_token(token_data)
 

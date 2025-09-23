@@ -11,6 +11,9 @@ class IAccountRepository(abc.ABC):
     async def get_by_pk(self, pk: int) -> Account: ...
 
     @abc.abstractmethod
+    async def get_by_name(self, name: str) -> Account: ...
+
+    @abc.abstractmethod
     async def update_by_pk(self, pk: int, data: AccountUpdate) -> Account: ...
 
     @abc.abstractmethod
