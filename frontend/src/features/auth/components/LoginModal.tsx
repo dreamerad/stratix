@@ -26,14 +26,15 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalPr
   const password = watch('password')
 
   const onSubmit = async (data: LoginRequest) => {
+    setIsSubmitting(true)
     try {
-      setIsSubmitting(true)
       await login(data)
+
+      // успешный вход → сбросить форму и закрыть модалку
       reset()
-      onClose() // Закрываем модалку только при успехе
+      onClose()
     } catch (err) {
-      // Ошибка уже показана через toast в useAuth
-      // Модалку НЕ закрываем, чтобы пользователь мог попробовать снова
+      // при ошибке: просто остаёмся в модалке
     } finally {
       setIsSubmitting(false)
     }
@@ -52,7 +53,7 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalPr
       maxWidth="md"
     >
       <div className="p-6">
-        {/* Toast-система показывает ошибки автоматически */}
+        {/* Toast-система сама показывает ошибки */}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -76,7 +77,7 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalPr
             autoComplete="current-password"
           />
 
-          {/* Additional options */}
+          {/* Дополнительные опции */}
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 text-text-secondary cursor-pointer group">
               <input
@@ -95,7 +96,7 @@ export function LoginModal({ isOpen, onClose, onSwitchToRegister }: LoginModalPr
             </button>
           </div>
 
-          {/* Submit button */}
+          {/* Кнопка сабмита */}
           <Button
             type="submit"
             variant="primary"

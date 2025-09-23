@@ -45,13 +45,11 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
 
       await registerUser(registerData)
 
-      reset() // Очищаем форму ТОЛЬКО при успехе
-      onClose() // Закрываем модалку ТОЛЬКО при успехе
+      reset()
+      onClose()
       return true
 
     } catch (err) {
-      // НЕ закрываем модалку, НЕ очищаем форму
-      // Toast показывается автоматически в useAuth
       return false
     } finally {
       setIsSubmitting(false)
