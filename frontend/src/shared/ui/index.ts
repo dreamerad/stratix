@@ -4,7 +4,7 @@ export { FormField } from './FormField'
 export { Button } from './Button'
 export { LoadingSpinner } from './LoadingSpinner'
 export { ToastProvider, useToast, useToastHelpers } from './Toast'
-
+export { Toggle } from './Toggle'
 // Export types if needed
 export type { ButtonProps } from './Button'
 export type { FormFieldProps } from './FormField'
