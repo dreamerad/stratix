@@ -30,10 +30,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       localStorage.setItem('access_token', response.access_token)
 
       set({
+        // user: response.user, // Убираем пока, пока не знаем структуру ответа
         isAuthenticated: true,
         isLoading: false,
         error: null
       })
+
+      // НЕ throw error при успехе
     } catch (error: any) {
       const errorMessage = error.response?.data?.detail || 'Login failed'
       set({
@@ -42,6 +45,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         isAuthenticated: false,
         user: null
       })
+
+      // ВАЖНО: выбрасываем ошибку дальше
       throw error
     }
   },
@@ -52,7 +57,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const response = await authApi.register(userData)
 
-      // Сохраняем токен и данные пользователя
+      // Сохраняем токен и данные пользователя (seamless registration)
       localStorage.setItem('access_token', response.token.access_token)
 
       set({
@@ -61,12 +66,18 @@ export const useAuthStore = create<AuthState>((set) => ({
         isLoading: false,
         error: null
       })
+
+      // НЕ throw error при успехе
     } catch (error: any) {
       const errorMessage = error.response?.data?.detail || 'Registration failed'
       set({
         error: errorMessage,
-        isLoading: false
+        isLoading: false,
+        isAuthenticated: false,  // ВАЖНО: НЕ аутентифицирован при ошибке
+        user: null              // ВАЖНО: очищаем пользователя при ошибке
       })
+
+      // ВАЖНО: выбрасываем ошибку дальше
       throw error
     }
   },
@@ -78,6 +89,8 @@ export const useAuthStore = create<AuthState>((set) => ({
       isAuthenticated: false,
       error: null
     })
+
+    // Toast показывается в компоненте через useAuth хук
   },
 
   clearError: () => {
@@ -92,6 +105,17 @@ export const useAuthStore = create<AuthState>((set) => ({
       return
     }
 
-    set({ isAuthenticated: true, isLoading: false })
+    // Можно добавить проверку валидности токена
+    try {
+      // const user = await authApi.validateToken(token)
+      // set({ user, isAuthenticated: true, isLoading: false })
+
+      // Пока просто устанавливаем authenticated если токен есть
+      set({ isAuthenticated: true, isLoading: false })
+    } catch (error) {
+      // Токен невалидный - очищаем
+      localStorage.removeItem('access_token')
+      set({ isLoading: false, isAuthenticated: false, user: null })
+    }
   }
 }))

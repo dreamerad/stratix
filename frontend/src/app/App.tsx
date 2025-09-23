@@ -2,6 +2,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { AppRouter } from '@/app/router/AppRouter'
 import { AuthProvider } from '@/entities/auth/providers/AuthProvider'
+import { ToastProvider } from '@/shared/ui'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,7 +18,9 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <AppRouter />
+          <ToastProvider>
+            <AppRouter />
+          </ToastProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

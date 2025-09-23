@@ -2,105 +2,219 @@
 @tailwind components;
 @tailwind utilities;
 
-/* CSS Variables */
+/* CSS Variables - остаются без изменений */
 :root {
-  /* Colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2a2a2a;
-  --bg-card: #333333;
-  --bg-card-hover: #3a3a3a;
-  --bg-modal: #2a2a2a;
-  --bg-overlay: rgba(0, 0, 0, 0.7);
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --bg-card: #333333;
+    --bg-card-hover: #3a3a3a;
+    --bg-modal: #2a2a2a;
+    --bg-overlay: rgba(0, 0, 0, 0.7);
 
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #808080;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --text-muted: #808080;
 
-  --accent-green: #00ff88;
-  --accent-green-hover: #00e676;
-  --accent-blue: #00bcd4;
-  --accent-purple: #9c27b0;
-  --accent-orange: #ff9800;
-  --accent-red: #f44336;
+    --accent-green: #00ff88;
+    --accent-green-hover: #00e676;
+    --accent-blue: #00bcd4;
+    --accent-purple: #9c27b0;
+    --accent-orange: #ff9800;
+    --accent-red: #f44336;
 
-  --border-color: #404040;
-  --border-hover: #505050;
+    --border-color: #404040;
+    --border-hover: #505050;
 }
 
+/* Базовые стили остаются */
 @layer base {
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-  html {
-    scroll-behavior: smooth;
-  }
+    html {
+        scroll-behavior: smooth;
+    }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-    line-height: 1.6;
-    color: #ffffff;
-    background-color: #1a1a1a;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        line-height: 1.6;
+        color: #ffffff;
+        background-color: #1a1a1a;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 600;
-    line-height: 1.2;
-    margin: 0;
-  }
+    h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;
+        line-height: 1.2;
+        margin: 0;
+    }
 
-  p {
-    margin: 0;
-    line-height: 1.6;
-  }
+    p {
+        margin: 0;
+        line-height: 1.6;
+    }
 
-  a {
-    color: #00ff88;
-    text-decoration: none;
-    transition: color 150ms ease-out;
-  }
+    a {
+        color: #00ff88;
+        text-decoration: none;
+        transition: color 150ms ease-out;
+    }
 
-  a:hover {
-    color: #00e676;
-  }
+    a:hover {
+        color: #00e676;
+    }
 
-  button {
-    font-family: inherit;
-    font-size: inherit;
-    border: none;
-    background: none;
-    cursor: pointer;
-    outline: none;
-    transition: all 150ms ease-out;
-  }
+    button {
+        font-family: inherit;
+        font-size: inherit;
+        border: none;
+        background: none;
+        cursor: pointer;
+        outline: none;
+        transition: all 150ms ease-out;
+    }
 
-  button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+    button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
-  input, select, textarea {
-    font-family: inherit;
-    font-size: inherit;
-    border: 1px solid #404040;
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    outline: none;
-    transition: all 150ms ease-out;
-  }
+    input, select, textarea {
+        font-family: inherit;
+        font-size: inherit;
+        border: 1px solid #404040;
+        background-color: #2a2a2a;
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        outline: none;
+        transition: all 150ms ease-out;
+    }
 
-  input:focus, select:focus, textarea:focus {
-    border-color: #00ff88;
-    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
-  }
+    input:focus, select:focus, textarea:focus {
+        border-color: #00ff88;
+        box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+    }
 
-  input::placeholder {
-    color: #808080;
-  }
+    input::placeholder {
+        color: #808080;
+    }
+}
+
+/* Новые анимации */
+@layer utilities {
+    /* В блок @layer utilities добавляем новые анимации: */
+    .animate-slideInRight {
+        animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .animate-slideOutRight {
+        animation: slideOutRight 0.3s ease-in;
+    }
+
+    .animate-shrink {
+        animation: shrink linear;
+    }
+
+    /* В блок keyframes добавляем: */
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(100%) scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+    }
+
+    @keyframes slideOutRight {
+        from {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%) scale(0.9);
+        }
+    }
+
+    @keyframes shrink {
+        from {
+            width: 100%;
+        }
+        to {
+            width: 0%;
+        }
+    }
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .animate-scaleIn {
+        animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .animate-slideUp {
+        animation: slideUp 0.4s ease-out;
+    }
+
+    .animate-shake {
+        animation: shake 0.5s ease-out;
+    }
+
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-5px);
+        }
+        75% {
+            transform: translateX(5px);
+        }
+    }
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { X } from 'lucide-react'
 import { useAuth } from '@/entities/auth/hooks/useAuth'
 import { RegisterRequest } from '@/shared/api/types'
+import { AnimatedModal, Button, FormField } from '@/shared/ui'
 
 interface RegisterModalProps {
   isOpen: boolean
@@ -18,23 +18,24 @@ interface RegisterForm {
 }
 
 export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
-  const { register: registerUser, error, clearError, isLoading } = useAuth()
+  const { register: registerUser, isLoading } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, touchedFields },
     watch,
     reset
-  } = useForm<RegisterForm>()
+  } = useForm<RegisterForm>({ mode: 'onBlur' })
 
   const password = watch('password')
+  const name = watch('name')
+  const confirmPassword = watch('confirmPassword')
 
   const onSubmit = async (data: RegisterForm) => {
     try {
       setIsSubmitting(true)
-      clearError()
 
       const registerData: RegisterRequest = {
         name: data.name,
@@ -43,10 +44,15 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
       }
 
       await registerUser(registerData)
-      reset()
-      onClose()
+
+      reset() // Очищаем форму ТОЛЬКО при успехе
+      onClose() // Закрываем модалку ТОЛЬКО при успехе
+      return true
 
     } catch (err) {
+      // НЕ закрываем модалку, НЕ очищаем форму
+      // Toast показывается автоматически в useAuth
+      return false
     } finally {
       setIsSubmitting(false)
     }
@@ -54,135 +60,129 @@ export function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModa
 
   const handleClose = () => {
     reset()
-    clearError()
     onClose()
   }
 
-  if (!isOpen) return null
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-primary-modal border border-border rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-xl font-semibold text-text-primary">Get Started</h2>
-          <button
-            onClick={handleClose}
-            className="w-8 h-8 bg-primary-card border border-border rounded-sm text-text-muted hover:bg-primary-card-hover hover:border-accent-red hover:text-accent-red transition-all flex items-center justify-center"
-          >
-            <X size={18} />
-          </button>
+    <AnimatedModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      title="Get Started"
+      maxWidth="md"
+    >
+      <div className="p-6">
+        {/* Welcome message */}
+        <div className="mb-6 text-center animate-slideUp">
+          <p className="text-text-secondary text-sm">
+            Join thousands of miners managing their operations with
+            <span className="text-accent-green font-semibold"> Stratix</span>
+          </p>
         </div>
 
-        {/* Content */}
-        <div className="p-6">
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 bg-red-500/10 border border-accent-red text-accent-red p-3 rounded-md text-sm text-center">
-              {error}
-            </div>
-          )}
+        <div className="space-y-6">
+          <FormField
+            label="Username"
+            error={errors.name?.message}
+            isValid={touchedFields.name && !errors.name && !!name}
+            helperText="Choose a unique username (minimum 3 characters)"
+            {...register('name', {
+              required: 'Username is required',
+              minLength: { value: 3, message: 'Username must be at least 3 characters' },
+              pattern: {
+                value: /^[a-zA-Z0-9_-]+$/,
+                message: 'Username can only contain letters, numbers, hyphens, and underscores'
+              }
+            })}
+            type="text"
+            placeholder="Choose a username"
+            autoComplete="username"
+          />
 
-          {/* Form - остальной код формы без изменений */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Все поля формы остаются такими же */}
-            <div>
-              <label className="block text-text-primary font-medium text-sm mb-2">
-                Username
-              </label>
+          <FormField
+            label="Password"
+            error={errors.password?.message}
+            isValid={touchedFields.password && !errors.password && !!password}
+            helperText="Password must be at least 6 characters"
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' }
+            })}
+            type="password"
+            placeholder="Create a secure password"
+            autoComplete="new-password"
+          />
+
+          <FormField
+            label="Confirm Password"
+            error={errors.confirmPassword?.message}
+            isValid={!!(touchedFields.confirmPassword && !errors.confirmPassword && confirmPassword && confirmPassword === password)}
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: value => value === password || 'Passwords do not match'
+            })}
+            type="password"
+            placeholder="Confirm your password"
+            autoComplete="new-password"
+          />
+
+          {/* Terms checkbox */}
+          <div className="space-y-2">
+            <label className="flex items-start gap-3 text-text-secondary text-sm cursor-pointer group">
               <input
-                {...register('name', {
-                  required: 'Username is required',
-                  minLength: { value: 3, message: 'Username must be at least 3 characters' }
-                })}
-                type="text"
-                className="w-full p-3 bg-primary-bg-secondary border border-border rounded-md text-text-primary transition-all focus:border-accent-green focus:shadow-[0_0_0_3px_rgba(0,255,136,0.1)]"
-                placeholder="Choose a username"
-                autoComplete="username"
+                {...register('agreeTerms', { required: 'You must agree to the terms' })}
+                type="checkbox"
+                className="w-4 h-4 mt-0.5 accent-accent-green transition-transform group-hover:scale-110"
               />
-              {errors.name && (
-                <p className="text-accent-red text-sm mt-1">{errors.name.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-text-primary font-medium text-sm mb-2">
-                Password
-              </label>
-              <input
-                {...register('password', {
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Password must be at least 6 characters' }
-                })}
-                type="password"
-                className="w-full p-3 bg-primary-bg-secondary border border-border rounded-md text-text-primary transition-all focus:border-accent-green focus:shadow-[0_0_0_3px_rgba(0,255,136,0.1)]"
-                placeholder="Create a password"
-                autoComplete="new-password"
-              />
-              {errors.password && (
-                <p className="text-accent-red text-sm mt-1">{errors.password.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-text-primary font-medium text-sm mb-2">
-                Confirm Password
-              </label>
-              <input
-                {...register('confirmPassword', {
-                  required: 'Please confirm your password',
-                  validate: value => value === password || 'Passwords do not match'
-                })}
-                type="password"
-                className="w-full p-3 bg-primary-bg-secondary border border-border rounded-md text-text-primary transition-all focus:border-accent-green focus:shadow-[0_0_0_3px_rgba(0,255,136,0.1)]"
-                placeholder="Confirm your password"
-                autoComplete="new-password"
-              />
-              {errors.confirmPassword && (
-                <p className="text-accent-red text-sm mt-1">{errors.confirmPassword.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="flex items-center gap-3 text-text-secondary text-sm cursor-pointer">
-                <input
-                  {...register('agreeTerms', { required: 'You must agree to the terms' })}
-                  type="checkbox"
-                  className="w-4 h-4 accent-accent-green"
-                />
+              <span className="group-hover:text-text-primary transition-colors">
                 I agree to the{' '}
-                <button type="button" className="text-accent-green hover:text-accent-green-hover">
+                <button
+                  type="button"
+                  className="text-accent-green hover:text-accent-green-hover underline transition-colors"
+                >
                   Terms of Service
                 </button>
-              </label>
-              {errors.agreeTerms && (
-                <p className="text-accent-red text-sm mt-1">{errors.agreeTerms.message}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting || isLoading}
-              className="w-full bg-accent-green text-primary-bg font-semibold py-3 rounded-md hover:bg-accent-green-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSubmitting ? 'Creating Account...' : 'Create Account'}
-            </button>
-          </form>
-
-          {/* Footer */}
-          <div className="text-center mt-6 pt-6 border-t border-border">
-            <p className="text-text-secondary text-sm">
-              Already have an account?{' '}
-              <button
-                onClick={onSwitchToLogin}
-                className="text-accent-green hover:text-accent-green-hover font-medium transition-colors"
-              >
-                Sign in
-              </button>
-            </p>
+                {' '}and{' '}
+                <button
+                  type="button"
+                  className="text-accent-green hover:text-accent-green-hover underline transition-colors"
+                >
+                  Privacy Policy
+                </button>
+              </span>
+            </label>
+            {errors.agreeTerms && (
+              <p className="text-accent-red text-sm animate-slideUp ml-7">
+                {errors.agreeTerms.message}
+              </p>
+            )}
           </div>
+
+          {/* Submit button с onClick вместо submit */}
+          <Button
+            onClick={() => handleSubmit(onSubmit)()}
+            variant="primary"
+            size="lg"
+            isLoading={isSubmitting || isLoading}
+            className="w-full"
+            rightIcon={!isSubmitting && !isLoading ? '✨' : undefined}
+          >
+            {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          </Button>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-8 pt-6 border-t border-border animate-slideUp delay-200">
+          <p className="text-text-secondary text-sm">
+            Already have an account?{' '}
+            <button
+              onClick={onSwitchToLogin}
+              className="text-accent-green hover:text-accent-green-hover font-medium transition-colors hover:underline"
+            >
+              Sign in
+            </button>
+          </p>
         </div>
       </div>
-    </div>
+    </AnimatedModal>
   )
 }

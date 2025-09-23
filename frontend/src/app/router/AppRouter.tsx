@@ -6,11 +6,11 @@ import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 
 export function AppRouter() {
   const { isAuthenticated, isLoading } = useAuth()
-
+  console.log('AppRouter: isAuthenticated =', isAuthenticated, 'isLoading =', isLoading)
   if (isLoading) {
     return <LoadingSpinner />
   }
-
+  console.log('AppRouter: Rendering routes, isAuthenticated =', isAuthenticated)
   return (
     <Routes>
       <Route
