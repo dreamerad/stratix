@@ -10,7 +10,7 @@ const mockData = [
   { time: '10:00:00', hashrate: 2200, timestamp: '2025-01-15 10:00:00' }
 ]
 
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload }: any) {
   if (active && payload && payload.length) {
     const data = payload[0].payload
     return (

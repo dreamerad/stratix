@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '@/entities/auth/hooks/useAuth'
-import { LandingPage } from '@/pages/LandingPage'
+import { AuthPage } from '@/pages/AuthPage.tsx'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { LoadingSpinner } from '@/shared/ui/LoadingSpinner'
 
@@ -16,7 +16,7 @@ export function AppRouter() {
       <Route
         path="/"
         element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LandingPage />
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <AuthPage />
         }
       />
       <Route
