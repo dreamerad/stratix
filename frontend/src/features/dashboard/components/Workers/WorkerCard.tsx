@@ -148,6 +148,7 @@ export function WorkerCard({ worker }: WorkerCardProps) {
                   {worker.lastActivity}
               </div>
           </div>
+
       </div>
   )
 }

@@ -1,10 +1,31 @@
 from fastapi import FastAPI, Request, HTTPException
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.auth.api.rest import router as auth_router
 from src.core.auth.exceptions import UnauthorizedException
 from src.core.config import settings
 from src.core.logging_setup import setup_fastapi_logging
+
+
+def setup_cors(app: FastAPI):
+    if settings.ENVIRONMENT == "prod":
+        origins = ["http://80.87.107.28:443"]
+    else:
+        origins = [
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "http://localhost:5173",
+            "http://127.0.0.1:5173"
+        ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
 
 def setup_exceptions_handler(app: FastAPI):
     @app.exception_handler(UnauthorizedException)
@@ -13,10 +34,17 @@ def setup_exceptions_handler(app: FastAPI):
 
 
 def setup_app():
-    app = FastAPI(title=settings.PROJECT_NAME, openapi_url="/backend/openapi.json", redoc_url="/backend/redoc",
-                  docs_url="/backend/docs")
+    app = FastAPI(
+        title=settings.PROJECT_NAME,
+        openapi_url="/backend/openapi.json",
+        redoc_url="/backend/redoc",
+        docs_url="/backend/docs"
+    )
+
+    setup_cors(app)
     setup_exceptions_handler(app)
     setup_fastapi_logging(app)
+
     app.include_router(auth_router, prefix="/backend/auth", tags=["Auth"])
 
     return app

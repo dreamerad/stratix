@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError, RegisterResponse } from './types'
 
-const BASE_URL = '/backend'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/backend'
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -10,7 +10,6 @@ export const apiClient = axios.create({
   },
 })
 
-// Request interceptor to add auth token
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token')
@@ -22,7 +21,6 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// Response interceptor to handle errors
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiError>) => {
@@ -33,7 +31,6 @@ apiClient.interceptors.response.use(
   }
 )
 
-// Auth API
 export const authApi = {
   login: async (data: LoginRequest): Promise<AuthResponse> => {
     const formData = new FormData()
@@ -54,7 +51,6 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<User> => {
-    // This endpoint doesn't exist yet in backend, but we'll implement it later
     const response = await apiClient.get<User>('/auth/me')
     return response.data
   },

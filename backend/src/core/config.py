@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    ENVIRONMENT: Literal['test', 'prod'] = 'prod'
+    ENVIRONMENT: Literal['test', 'dev', 'prod'] = 'prod'
     PROJECT_NAME: str = "Pool Backend"
     SECRET_KEY: str = "your-secret-key-here"
     DOMAIN: str

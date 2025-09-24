@@ -62,7 +62,7 @@ export function DashboardHeader() {
                 <div className="flex items-center gap-6 ">
                     {/* Переключатель монет */}
                     {/* Переключатель монет */}
-                    <div className="flex items-center rounded-lg p-1 w-[101px] h-[40px] bg-[#222222]">
+                    <div className="flex items-center rounded-lg p-2 w-[101px] h-[40px] bg-[#222222]">
                         {coins.map((coin) => (
                             <button
                                 key={coin}
@@ -70,7 +70,7 @@ export function DashboardHeader() {
 className={clsx(
   'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
   selectedCoin === coin
-    ? 'text-[#00FF26] bg-transparent [box-shadow:0_0_8px_rgba(0,255,38,0.6)]'
+    ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
     : 'text-text-secondary hover:text-text-primary'
 )}
                             >
