@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError, RegisterResponse } from './types'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/backend'
+const BASE_URL = 'https://demo.0xstratix.com/backend'
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
