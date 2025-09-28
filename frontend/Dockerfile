@@ -3,14 +3,14 @@ FROM node:18-alpine as builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY . .
 RUN npm run build
 
 FROM nginx:alpine
 
-COPY nginx.spa.conf /etc/nginx/conf.d/default.conf
+COPY ../nginx/nginx.spa.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
