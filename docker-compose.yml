@@ -16,7 +16,7 @@ services:
     build: ./frontend
     ports:
       - "80:80"
-      - "443:80"
+      - "443:443"
     env_file:
       - ./frontend/.env.production
     volumes:
