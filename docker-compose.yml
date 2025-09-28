@@ -15,9 +15,13 @@ services:
   frontend:
     build: ./frontend
     ports:
+      - "80:80"
       - "443:80"
     env_file:
       - ./frontend/.env.production
+    volumes:
+      - ./ssl:/etc/nginx/ssl
+      - ./certbot/webroot:/var/www/html
     networks:
       - stratix-network
     restart: unless-stopped
@@ -30,6 +34,15 @@ services:
       - stratix-network
     depends_on:
       - db
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./ssl:/etc/letsencrypt
+      - ./certbot/webroot:/var/www/html
+    command: certonly --webroot --webroot-path=/var/www/html --email dreamery@yandex.com --agree-tos --no-eff-email -d demo.0xstratix.com
+    networks:
+      - stratix-network
 
 networks:
   stratix-network:
