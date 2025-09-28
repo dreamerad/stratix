@@ -40,7 +40,7 @@ export function DashboardPage() {
 
                 {/* Секция воркеров */}
                 <div>
-                    <h2 className="text-text-primary text-lg font-semibold mb-4">Workers Management</h2>
+                    <h2 className="text-text-primary text-lg font-semibold mb-4">test Management</h2>
                     <WorkerFilters/>
 
                     {/* Сетка воркеров */}
