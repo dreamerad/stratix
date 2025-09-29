@@ -9,7 +9,7 @@ from src.core.logging_setup import setup_fastapi_logging
 
 def setup_cors(app: FastAPI):
     if settings.ENVIRONMENT == "prod":
-        origins = ["http://80.87.107.28:443"]
+        origins = ["https://demo.0xstratix.com"]
     else:
         origins = [
             "http://localhost:3000",
@@ -36,16 +36,16 @@ def setup_exceptions_handler(app: FastAPI):
 def setup_app():
     app = FastAPI(
         title=settings.PROJECT_NAME,
-        openapi_url="/backend/openapi.json",
-        redoc_url="/backend/redoc",
-        docs_url="/backend/docs"
+        openapi_url="/openapi.json",
+        redoc_url="/redoc",
+        docs_url="/docs"
     )
 
     setup_cors(app)
     setup_exceptions_handler(app)
     setup_fastapi_logging(app)
 
-    app.include_router(auth_router, prefix="/backend/auth", tags=["Auth"])
+    app.include_router(auth_router, prefix="/auth", tags=["Auth"])
 
     return app
 
