@@ -89,29 +89,20 @@ export function DashboardHeader() {
                     {/* Переключатель панелей - показываем только для админов */}
                     {userData?.isAdmin && (
                         <div className="flex items-center rounded-lg p-1 bg-[#2A2A2A] gap-1">
-                            {['Hotel', 'Admin'].map((panel) => {
-                                const isActive = (panel === 'Hotel' && selectedPanel === 'Dashboard') ||
-                                    (panel === 'Admin' && selectedPanel === 'Admin')
-
-                                return (
-                                    <button
-                                        key={panel}
-                                        onClick={() => handlePanelSwitch(panel === 'Hotel' ? 'Dashboard' : 'Admin')}
-                                        className={clsx(
-                                            'text-sm font-medium rounded-md transition-all duration-200 px-2 py-2',
-                                            selectedPanel === 'Dashboard'
-                                                ? panel === 'Hotel'
-                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
-                                                    : 'text-[#7A7A7A]'
-                                                : panel === 'Admin'
-                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
-                                                    : 'text-[#7A7A7A]'
-                                        )}
-                                    >
-                                        {panel}
-                                    </button>
-                                )
-                            })}
+                            {['Hotel', 'Admin'].map((panel) => (
+                                <button
+                                    key={panel}
+                                    onClick={() => handlePanelSwitch(panel === 'Hotel' ? 'Dashboard' : 'Admin')}
+                                    className={clsx(
+                                        'text-sm font-medium rounded-md transition-all duration-200 px-2 py-2',
+                                        selectedPanel === (panel === 'Hotel' ? 'Dashboard' : 'Admin')
+                                            ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
+                                            : 'text-[#7A7A7A]'
+                                    )}
+                                >
+                                    {panel}
+                                </button>
+                            ))}
                         </div>
                     )}
                     {/* Профиль пользователя */}
