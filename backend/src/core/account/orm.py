@@ -10,3 +10,4 @@ class AccountDB(BaseMixin, Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True)
     password_hash: Mapped[str]
+    is_admin: Mapped[bool | None] = mapped_column(default=False, nullable=True)

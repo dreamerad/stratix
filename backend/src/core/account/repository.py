@@ -68,6 +68,7 @@ class PGAccountRepository(IAccountRepository):
             id=model.id,
             name=model.name,
             password_hash=model.password_hash,
+            is_admin=model.is_admin,
             attributes=attributes,
             created_at=model.created_at
         )

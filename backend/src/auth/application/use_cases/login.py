@@ -25,7 +25,12 @@ class LoginUseCase:
         return self.generate_token(account)
 
     def generate_token(self, account: Account) -> AuthToken:
-        token_data = AuthTokenData(account_id=account.id, attributes=account.attributes)
+        token_data = AuthTokenData(
+            account_id=account.id,
+            name=account.name,
+            is_admin=account.is_admin,
+            attributes=account.attributes
+        )
         return self.provider.generate_token(token_data)
 
     async def validate(self, dto: LoginDTO, account: Account):

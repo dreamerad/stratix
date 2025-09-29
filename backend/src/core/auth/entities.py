@@ -14,4 +14,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     account_id: int
+    is_admin: bool
+    name: str
     attributes: list[AccountAttribute]

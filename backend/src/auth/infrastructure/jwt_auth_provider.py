@@ -3,6 +3,7 @@ from typing import Any
 
 import jwt
 from jwt.exceptions import InvalidTokenError
+
 from src.auth.application.interfaces.auth_provider import IAuthProvider
 from src.auth.domain.entities import AuthToken, AuthTokenData
 from src.core.auth.entities import AccountAttribute
@@ -16,7 +17,14 @@ class JWTAuthProvider(IAuthProvider):
     def generate_token(self, data: AuthTokenData, expire_at: dt.datetime | None = None) -> AuthToken:
         if expire_at is None:
             expire_at = dt.datetime.now(dt.timezone.utc) + dt.timedelta(seconds=self.ACCESS_TOKEN_EXPIRE)
-        to_encode = {"exp": expire_at, "sub": str(data.account_id), "scope": " ".join(i.value for i in data.attributes)}
+
+        to_encode = {
+            "exp": expire_at,
+            "sub": str(data.account_id),
+            "is_admin": data.is_admin,
+            "username": data.name,
+            "scope": " ".join(i.value for i in data.attributes)
+        }
         encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
         return AuthToken(access_token=encoded_jwt)
 
@@ -24,6 +32,9 @@ class JWTAuthProvider(IAuthProvider):
         account_id = payload.get("sub")
         if account_id is None:
             raise UnauthorizedException()
+
+        is_admin = payload.get("is_admin", False)
+        username = payload.get("username")
 
         scope = payload.get("scope")
         if scope is None:
@@ -41,7 +52,12 @@ class JWTAuthProvider(IAuthProvider):
                 raise UnauthorizedException()
             attributes.append(AccountAttribute(attribute))
 
-        return AuthTokenData(account_id=int(account_id), attributes=attributes)
+        return AuthTokenData(
+            account_id=int(account_id),
+            name=username,
+            is_admin=is_admin,
+            attributes=attributes
+        )
 
     def validate_token(self, token_raw: str) -> AuthTokenData:
         try:
