@@ -35,6 +35,7 @@ const decodeToken = (token: string): UserData | null => {
 }
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
+    userData: null,
     isAuthenticated: false,
     isLoading: true,
     error: null,
@@ -72,7 +73,6 @@ export const useAuthStore = create<AuthState>((set) => ({
         try {
             const response = await authApi.register(userData)
 
-            // Сохраняем токен и данные пользователя (seamless registration)
             localStorage.setItem('access_token', response.token.access_token)
 
             set({
@@ -82,17 +82,15 @@ export const useAuthStore = create<AuthState>((set) => ({
                 error: null
             })
 
-            // НЕ throw error при успехе
         } catch (error: any) {
             const errorMessage = error.response?.data?.detail || 'Registration failed'
             set({
                 error: errorMessage,
                 isLoading: false,
-                isAuthenticated: false,  // ВАЖНО: НЕ аутентифицирован при ошибке
-                user: null              // ВАЖНО: очищаем пользователя при ошибке
+                isAuthenticated: false,
+                user: null
             })
 
-            // ВАЖНО: выбрасываем ошибку дальше
             throw error
         }
     },
