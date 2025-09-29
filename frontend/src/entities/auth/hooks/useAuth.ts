@@ -1,8 +1,10 @@
 import {useAuthStore} from '@/entities/auth/store/authStore'
 import {useToastHelpers} from '@/shared/ui'
+import {useNavigate} from 'react-router-dom'
 import {LoginRequest, RegisterRequest} from '@/shared/api/types'
 
 export function useAuth() {
+    const navigate = useNavigate()
     const {
         user,
         userData,
@@ -50,6 +52,7 @@ export function useAuth() {
 
     const logout = () => {
         storeLogout()
+        navigate('/auth')
         toast.info(
             'Signed Out',
             'You have been successfully signed out'

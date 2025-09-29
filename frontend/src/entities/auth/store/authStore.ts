@@ -101,6 +101,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         localStorage.removeItem('access_token')
         set({
             user: null,
+            userData: null,
             isAuthenticated: false,
             error: null
         })

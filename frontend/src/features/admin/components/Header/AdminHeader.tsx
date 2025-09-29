@@ -3,27 +3,36 @@ import {useNavigate} from 'react-router-dom'
 import {clsx} from 'clsx'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
 
-type CoinType = 'BTC' | 'LTC'
+type AdminSection = 'users' | 'servers' | 'logs' | 'stats'
 
-export function DashboardHeader() {
+interface AdminHeaderProps {
+    activeSection: AdminSection
+    onSectionChange: (section: AdminSection) => void
+}
+
+export function AdminHeader({activeSection, onSectionChange}: AdminHeaderProps) {
     const {userData, logout} = useAuth()
     const navigate = useNavigate()
-    const [selectedCoin, setSelectedCoin] = useState<CoinType>('BTC')
-    const [selectedPanel, setSelectedPanel] = useState<'Dashboard' | 'Admin'>('Dashboard')
+    const [selectedPanel, setSelectedPanel] = useState<'Dashboard' | 'Admin'>('Admin')
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
-    const coins: CoinType[] = ['BTC', 'LTC']
+    const adminSections: { key: AdminSection; label: string }[] = [
+        {key: 'users', label: 'Users'},
+        {key: 'servers', label: 'Servers'},
+        {key: 'logs', label: 'Logs'},
+        {key: 'stats', label: 'Stats'}
+    ]
+
+    const handlePanelSwitch = (panel: 'Dashboard' | 'Admin') => {
+        setSelectedPanel(panel)
+        if (panel === 'Dashboard') {
+            navigate('/dashboard')
+        }
+    }
 
     const handleLogout = () => {
         logout()
         setIsUserMenuOpen(false)
-    }
-
-    const handlePanelSwitch = (panel: 'Dashboard' | 'Admin') => {
-        setSelectedPanel(panel)
-        if (panel === 'Admin') {
-            navigate('/admin/users')
-        }
     }
 
     return (
@@ -65,56 +74,114 @@ export function DashboardHeader() {
                             d="M143.519 20.5455C142.744 20.5455 142.098 20.3624 141.581 19.9963C141.075 19.6193 140.741 19.097 140.579 18.4293L140.805 18.397V23.7117H139.125V12.1615H140.725V14.0516L140.563 14.0031C140.735 13.3785 141.102 12.8885 141.662 12.5331C142.222 12.1777 142.878 12 143.632 12C144.375 12 145.016 12.1777 145.555 12.5331C146.104 12.8885 146.524 13.3839 146.815 14.0193C147.116 14.6546 147.267 15.3977 147.267 16.2485C147.267 17.1101 147.111 17.8639 146.799 18.5101C146.486 19.1562 146.05 19.657 145.49 20.0124C144.93 20.3678 144.273 20.5455 143.519 20.5455ZM143.164 19.1562C143.896 19.1562 144.478 18.8978 144.909 18.3808C145.339 17.8639 145.555 17.1531 145.555 16.2485C145.555 15.3547 145.339 14.66 144.909 14.1646C144.478 13.6585 143.891 13.4054 143.148 13.4054C142.415 13.4054 141.828 13.6639 141.387 14.1808C140.956 14.687 140.741 15.3924 140.741 16.297C140.741 17.1801 140.956 17.8801 141.387 18.397C141.828 18.9032 142.421 19.1562 143.164 19.1562Z"
                             fill="#00FF26"/>
                     </svg>
+                </div>
+
+                {/* Центр - Навигация админки */}
+                {/* Центр - Навигация админки */}
+                <div className="flex items-center gap-8">
+                    {adminSections.map((section) => (
+                        <button
+                            key={section.key}
+                            onClick={() => onSectionChange(section.key)}
+                            className={clsx(
+                                'text-sm font-medium transition-colors duration-200 flex items-center gap-2 pb-1 relative',
+                                activeSection === section.key
+                                    ? 'text-white'  // Активный остается белым
+                                    : 'text-text-secondary hover:text-white'
+                            )}
+                        >
+                            {/* СЮДА ВСТАВЬ ИКОНКУ ДЛЯ USERS */}
+                            {section.key === 'users' && (
+                                <svg width="20" height="18" viewBox="0 0 20 18" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M13.3332 16.5V14.8333C13.3332 13.9493 12.982 13.1014 12.3569 12.4763C11.7317 11.8512 10.8839 11.5 9.99984 11.5H4.99984C4.11578 11.5 3.26794 11.8512 2.64281 12.4763C2.01769 13.1014 1.6665 13.9493 1.6665 14.8333V16.5M13.3332 1.60667C14.048 1.79197 14.681 2.20939 15.1329 2.79339C15.5848 3.37738 15.83 4.09491 15.83 4.83333C15.83 5.57176 15.5848 6.28928 15.1329 6.87328C14.681 7.45728 14.048 7.87469 13.3332 8.06M18.3332 16.5V14.8333C18.3326 14.0948 18.0868 13.3773 17.6343 12.7936C17.1818 12.2099 16.5483 11.793 15.8332 11.6083M10.8332 4.83333C10.8332 6.67428 9.34079 8.16667 7.49984 8.16667C5.65889 8.16667 4.1665 6.67428 4.1665 4.83333C4.1665 2.99238 5.65889 1.5 7.49984 1.5C9.34079 1.5 10.8332 2.99238 10.8332 4.83333Z"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"/>
+                                </svg>
+
+                            )}
+
+                            {/* СЮДА ВСТАВЬ ИКОНКУ ДЛЯ SERVERS */}
+                            {section.key === 'servers' && (
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_636_2276)">
+                                        <path
+                                            d="M4.99984 5.00033H5.00817M4.99984 15.0003H5.00817M3.33317 1.66699H16.6665C17.587 1.66699 18.3332 2.41318 18.3332 3.33366V6.66699C18.3332 7.58747 17.587 8.33366 16.6665 8.33366H3.33317C2.4127 8.33366 1.6665 7.58747 1.6665 6.66699V3.33366C1.6665 2.41318 2.4127 1.66699 3.33317 1.66699ZM3.33317 11.667H16.6665C17.587 11.667 18.3332 12.4132 18.3332 13.3337V16.667C18.3332 17.5875 17.587 18.3337 16.6665 18.3337H3.33317C2.4127 18.3337 1.6665 17.5875 1.6665 16.667V13.3337C1.6665 12.4132 2.4127 11.667 3.33317 11.667Z"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                            stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_636_2276">
+                                            <rect width="20" height="20" fill="white"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+
+                            )}
+
+                            {/* СЮДА ВСТАВЬ ИКОНКУ ДЛЯ LOGS */}
+                            {section.key === 'logs' && (
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M10.8333 10H17.5M10.8333 15H17.5M10.8333 5H17.5M2.5 10H3.33333M2.5 15H3.33333M2.5 5H3.33333M6.66667 10H7.5M6.66667 15H7.5M6.66667 5H7.5"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"/>
+                                </svg>
+
+                            )}
+
+                            {section.key === 'stats' && (
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M2.5 2.5V15.8333C2.5 16.2754 2.67559 16.6993 2.98816 17.0118C3.30072 17.3244 3.72464 17.5 4.16667 17.5H17.5M15 14.1667V7.5M10.8333 14.1667V4.16667M6.66667 14.1667V11.6667"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"/>
+                                </svg>
+
+                            )}
+
+                            <span>{section.label}</span>
+
+                            {activeSection === section.key && (
+                                <>
+                                    <div
+                                        className="absolute top-9 left-0 right-0 h-[1px] bg-[#00FF26] opacity-90 translate-y-[px]"/>
+                                    <div
+                                        className="absolute -bottom-2 top-1 left-1/2 transform -translate-x-1/2 w-20 bg-gradient-to-t from-[rgba(0,255,38,0.3)] via-[rgba(0,255,38,0.1)] to-transparent blur-md"/>
+                                    <div
+                                        className="absolute  left-2 transform -translate-x-1/2 w-12 bg-gradient-to-t from-[rgba(0,255,38,0.2)] to-transparent blur-sm"/>
+                                </>
+                            )}
+                        </button>
+                    ))}
 
                 </div>
-                {/* Правая часть - Кнопки монет + профиль */}
-                <div className="flex items-center gap-6 ">
-                    {/* Переключатель монет */}
-                    <div className="flex items-center rounded-lg p-2 w-[101px] h-[40px] bg-[#222222]">
-                        {coins.map((coin) => (
+
+                {/* Правая часть - Переключатель панелей + Профиль */}
+                <div className="flex items-center gap-6">
+                    {/* Переключатель Dashboard/Admin */}
+                    <div className="flex items-center rounded-lg p-1 bg-[#2A2A2A] gap-1">
+                        {['Hotel', 'Admin'].map((panel) => (
                             <button
-                                key={coin}
-                                onClick={() => setSelectedCoin(coin)}
+                                key={panel}
+                                onClick={() => handlePanelSwitch(panel === 'Hotel' ? 'Dashboard' : 'Admin')}
                                 className={clsx(
-                                    'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
-                                    selectedCoin === coin
-                                        ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
-                                        : 'text-text-secondary hover:text-text-primary'
+                                    'text-sm font-medium rounded-md transition-all duration-200 px-4 py-2',
+                                    selectedPanel === (panel === 'Hotel' ? 'Dashboard' : 'Admin')
+                                        ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
+                                        : 'text-[#7A7A7A]'
                                 )}
                             >
-                                {coin}
+                                {panel}
                             </button>
                         ))}
                     </div>
-                    {/* Переключатель панелей - показываем только для админов */}
-                    {userData?.isAdmin && (
-                        <div className="flex items-center rounded-lg p-1 bg-[#2A2A2A] gap-1">
-                            {['Hotel', 'Admin'].map((panel) => {
-                                const isActive = (panel === 'Hotel' && selectedPanel === 'Dashboard') ||
-                                    (panel === 'Admin' && selectedPanel === 'Admin')
 
-                                return (
-                                    <button
-                                        key={panel}
-                                        onClick={() => handlePanelSwitch(panel === 'Hotel' ? 'Dashboard' : 'Admin')}
-                                        className={clsx(
-                                            'text-sm font-medium rounded-md transition-all duration-200 px-2 py-2',
-                                            selectedPanel === 'Dashboard'
-                                                ? panel === 'Hotel'
-                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
-                                                    : 'text-[#7A7A7A]'
-                                                : panel === 'Admin'
-                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
-                                                    : 'text-[#7A7A7A]'
-                                        )}
-                                    >
-                                        {panel}
-                                    </button>
-                                )
-                            })}
-                        </div>
-                    )}
-                    {/* Профиль пользователя */}
+                    {/* Пользователь - такой же как в DashboardHeader */}
                     <div className="relative">
                         <button
                             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -194,8 +261,6 @@ export function DashboardHeader() {
                                         </svg>
                                     </button>
 
-                                    {/* Divider */}
-
                                     {/* Logout */}
                                     <button
                                         onClick={handleLogout}
@@ -219,14 +284,6 @@ export function DashboardHeader() {
                     </div>
                 </div>
             </div>
-
-            {/* Закрытие меню при клике вне области */}
-            {isUserMenuOpen && (
-                <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setIsUserMenuOpen(false)}
-                />
-            )}
         </header>
     )
 }

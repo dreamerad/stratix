@@ -1,14 +1,29 @@
-import { useState } from 'react'
-import { DashboardHeader } from '@/features/dashboard/components/Header/DashboardHeader'
-import { HashrateChart } from '@/features/dashboard/components/Chart/HashrateChart'
-import { WorkerStats } from '@/features/dashboard/components/Stats/WorkerStats'
-import { FeeSettings } from '@/features/dashboard/components/FeeSettings/FeeSettings'
-import { WorkerFilters } from '@/features/dashboard/components/Workers/WorkerFilters'
-import { WorkerCard, mockWorkers } from "@/features/dashboard/components/Workers/WorkerCard"
-import { Pagination } from '@/shared/ui'
-import { Footer } from '@/shared/ui'
+import {useState} from 'react'
+import {Navigate} from 'react-router-dom'
+import {DashboardHeader} from '@/features/dashboard/components/Header/DashboardHeader'
+import {HashrateChart} from '@/features/dashboard/components/Chart/HashrateChart'
+import {WorkerStats} from '@/features/dashboard/components/Stats/WorkerStats'
+import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettings'
+import {WorkerFilters} from '@/features/dashboard/components/Workers/WorkerFilters'
+import {mockWorkers, WorkerCard} from "@/features/dashboard/components/Workers/WorkerCard"
+import {Footer, Pagination} from '@/shared/ui'
+import {useAuth} from '@/entities/auth/hooks/useAuth'
+
 export function DashboardPage() {
+    const {isAuthenticated, isLoading} = useAuth()
     const [currentPage, setCurrentPage] = useState(1)
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-primary-bg flex items-center justify-center">
+                <div className="text-white">Loading...</div>
+            </div>
+        )
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/auth" replace/>
+    }
     const itemsPerPage = 8
 
     const totalPages = Math.max(1, Math.ceil(mockWorkers.length / itemsPerPage))
@@ -46,7 +61,7 @@ export function DashboardPage() {
                     {/* Сетка воркеров */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
                         {visibleWorkers.map((worker) => (
-                            <WorkerCard key={worker.id} worker={worker} />
+                            <WorkerCard key={worker.id} worker={worker}/>
                         ))}
                     </div>
 
@@ -59,7 +74,7 @@ export function DashboardPage() {
                 </div>
 
             </main>
-                          <Footer />
+            <Footer/>
 
         </div>
     )
