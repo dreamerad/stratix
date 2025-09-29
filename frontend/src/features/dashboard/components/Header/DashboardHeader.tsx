@@ -5,8 +5,9 @@ import {useAuth} from '@/entities/auth/hooks/useAuth'
 type CoinType = 'BTC' | 'LTC'
 
 export function DashboardHeader() {
-    const {user, logout} = useAuth()
+    const {userData, logout} = useAuth()
     const [selectedCoin, setSelectedCoin] = useState<CoinType>('BTC')
+    const [selectedPanel, setSelectedPanel] = useState<'Dashboard' | 'Admin'>('Dashboard')
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
     const coins: CoinType[] = ['BTC', 'LTC']
@@ -14,6 +15,14 @@ export function DashboardHeader() {
     const handleLogout = () => {
         logout()
         setIsUserMenuOpen(false)
+    }
+
+    const handlePanelSwitch = (panel: 'Dashboard' | 'Admin') => {
+        setSelectedPanel(panel)
+        if (panel === 'Admin') {
+            // TODO: добавить навигацию в админку
+            console.log('Navigate to admin panel')
+        }
     }
 
     return (
@@ -57,7 +66,6 @@ export function DashboardHeader() {
                     </svg>
 
                 </div>
-
                 {/* Правая часть - Кнопки монет + профиль */}
                 <div className="flex items-center gap-6 ">
                     {/* Переключатель монет */}
@@ -67,18 +75,45 @@ export function DashboardHeader() {
                             <button
                                 key={coin}
                                 onClick={() => setSelectedCoin(coin)}
-className={clsx(
-  'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
-  selectedCoin === coin
-    ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
-    : 'text-text-secondary hover:text-text-primary'
-)}
+                                className={clsx(
+                                    'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
+                                    selectedCoin === coin
+                                        ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
+                                        : 'text-text-secondary hover:text-text-primary'
+                                )}
                             >
                                 {coin}
                             </button>
                         ))}
                     </div>
+                    {/* Переключатель панелей - показываем только для админов */}
+                    {userData?.isAdmin && (
+                        <div className="flex items-center rounded-lg p-1 bg-[#2A2A2A] gap-1">
+                            {['Hotel', 'Admin'].map((panel) => {
+                                const isActive = (panel === 'Hotel' && selectedPanel === 'Dashboard') ||
+                                    (panel === 'Admin' && selectedPanel === 'Admin')
 
+                                return (
+                                    <button
+                                        key={panel}
+                                        onClick={() => handlePanelSwitch(panel === 'Hotel' ? 'Dashboard' : 'Admin')}
+                                        className={clsx(
+                                            'text-sm font-medium rounded-md transition-all duration-200 px-2 py-2',
+                                            selectedPanel === 'Dashboard'
+                                                ? panel === 'Hotel'
+                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
+                                                    : 'text-[#7A7A7A]'
+                                                : panel === 'Admin'
+                                                    ? 'text-[#DB3DFF] bg-[#DB3DFF]/10'
+                                                    : 'text-[#7A7A7A]'
+                                        )}
+                                    >
+                                        {panel}
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    )}
                     {/* Профиль пользователя */}
                     <div className="relative">
                         <button
@@ -98,8 +133,8 @@ className={clsx(
 
                             {/* Ник пользователя */}
                             <span className="text-text-primary font-medium">
-                {user?.name || 'User'}
-              </span>
+  {userData?.name || 'User'}
+</span>
 
                             {/* Стрелка вниз */}
                             <svg
