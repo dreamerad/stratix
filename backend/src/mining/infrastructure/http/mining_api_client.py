@@ -1,9 +1,9 @@
-
+from typing import List
 
 from src.core.http.api_client import HttpApiClient
 from src.mining.application.interfaces.mining_client import IMiningApiClient
-from src.mining.domain.dtos import StatsHashrateResponseDTO
-from src.mining.domain.enum import CurrencyType
+from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartHashrateResponseDTO, ChartDataPoint
+from src.mining.domain.enum import CurrencyType, TimeType
 
 
 class HttpMiningApiClient(IMiningApiClient):
@@ -12,5 +12,12 @@ class HttpMiningApiClient(IMiningApiClient):
 
     async def get_stats_hashrate(self, currency: CurrencyType) -> StatsHashrateResponseDTO:
         response = await self.api.request("GET", f"/api/stats/hashrate?currency={currency.value}")
-        print(response)
         return StatsHashrateResponseDTO(**response.data)
+
+    async def get_chart_hashrate(self, currency: CurrencyType, hours: TimeType) -> List[ChartDataPoint]:
+        params = {
+            "currency": currency.value,
+            "hours": int(hours.value)
+        }
+        response = await self.api.request("GET", f"/api/stats/chart", params=params)
+        return [ChartDataPoint(**item) for item in response.data]
