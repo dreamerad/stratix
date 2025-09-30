@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import {clsx} from 'clsx'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
 import {useCurrency} from '@/shared/providers/CurrencyProvider'
@@ -9,12 +9,16 @@ type CoinType = 'BTC' | 'LTC'
 export function DashboardHeader() {
     const {userData, logout} = useAuth()
     const {currency, setCurrency} = useCurrency()
+    const location = useLocation()
     const navigate = useNavigate()
     const [selectedPanel, setSelectedPanel] = useState<'Dashboard' | 'Admin'>('Dashboard')
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
     const coins: CoinType[] = ['BTC', 'LTC']
 
+    const isActivePage = (path: string) => {
+        return location.pathname === path
+    }
     const handleLogout = () => {
         logout()
         setIsUserMenuOpen(false)
@@ -67,6 +71,33 @@ export function DashboardHeader() {
                             fill="#00FF26"/>
                     </svg>
 
+                </div>
+                <div className="flex items-center gap-4">
+                    {/* Навигация по страницам */}
+                    <nav className="flex items-center gap-1">
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className={clsx(
+                                'px-3 py-2 text-sm rounded-md transition-colors',
+                                isActivePage('/dashboard')
+                                    ? 'text-text-primary bg-primary-bg-secondary'
+                                    : 'text-text-muted hover:text-text-primary'
+                            )}
+                        >
+                            Dashboard
+                        </button>
+                        <button
+                            onClick={() => navigate('/workers')}
+                            className={clsx(
+                                'px-3 py-2 text-sm rounded-md transition-colors',
+                                isActivePage('/workers')
+                                    ? 'text-text-primary bg-primary-bg-secondary'
+                                    : 'text-text-muted hover:text-text-primary'
+                            )}
+                        >
+                            Workers
+                        </button>
+                    </nav>
                 </div>
                 {/* Правая часть - Кнопки монет + профиль */}
                 <div className="flex items-center gap-6 ">
