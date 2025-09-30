@@ -97,7 +97,7 @@ export function HashrateChart() {
                 {/* Переключатель периодов */}
                 <div
                     className="flex items-center bg-primary-bg-secondary rounded-lg p-1 h-[36px] md:h-[40px] w-full sm:w-auto">
-                    {Object.entries(periodMap).map(([period, hours], index) => (
+                    {Object.entries(periodMap).map(([period, hours]) => (
                         <button
                             key={period}
                             onClick={() => setSelectedPeriod(hours as 24 | 168 | 720)}
