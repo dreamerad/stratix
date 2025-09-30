@@ -10,10 +10,9 @@ from src.auth.domain.entities import AuthTokenData
 from src.auth.infrastructure.db.unit_of_work import PGAuthUnitOfWork
 from src.auth.infrastructure.jwt_auth_provider import JWTAuthProvider
 from src.auth.infrastructure.password_helper import PasswordHelper
-from src.core.auth.entities import AccountAttribute
 from src.core.auth.exceptions import UnauthorizedException
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/backend/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 def get_auth_uow() -> IAuthUnitOfWork:
@@ -30,11 +29,9 @@ async def parse_access_token(token: str = Depends(oauth2_scheme),
     return token_data
 
 
-def validate_page_access(*attributes: AccountAttribute):
+def validate_page_access(admin_required: bool = False):
     async def _validate(token_data: AuthTokenData = Depends(parse_access_token)):
-        if AccountAttribute.admin in token_data.attributes:
-            return
-        if not all(attr in token_data.attributes for attr in attributes):
+        if admin_required and not token_data.is_admin:
             raise UnauthorizedException()
 
     return _validate

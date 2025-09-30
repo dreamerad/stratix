@@ -10,7 +10,6 @@ class AuthenticationAttribute(BaseModel):
 class Register(BaseModel):
     name: str
     password_hash: str
-    attributes: list[AuthenticationAttribute]
 
 
 class Login(BaseModel):

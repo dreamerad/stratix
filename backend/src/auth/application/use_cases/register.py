@@ -31,8 +31,7 @@ class RegisterUseCase:
         token_data = AuthTokenData(
             account_id=account.id,
             name=account.name,
-            is_admin=account.is_admin,
-            attributes=account.attributes
+            is_admin=account.is_admin
         )
         token = self.auth_provider.generate_token(token_data)
 
@@ -41,7 +40,6 @@ class RegisterUseCase:
                 id=account.id,
                 name=account.name,
                 is_admin=account.is_admin,
-                attributes=account.attributes,
                 created_at=account.created_at
             ),
             token=AuthTokenDTO(

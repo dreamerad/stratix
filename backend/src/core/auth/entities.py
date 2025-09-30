@@ -1,10 +1,4 @@
-from enum import Enum
-
 from pydantic import BaseModel
-
-
-class AccountAttribute(str, Enum):
-    admin = "admin"
 
 
 class Token(BaseModel):
@@ -16,4 +10,3 @@ class TokenData(BaseModel):
     account_id: int
     is_admin: bool
     name: str
-    attributes: list[AccountAttribute]

@@ -28,7 +28,7 @@ class PGAccountRepository(IAccountRepository):
         return self._to_domain(model)
 
     async def create(self, data: AccountCreate) -> Account:
-        model = AccountDB(**data.model_dump(exclude={"attributes"}))
+        model = AccountDB(**data.model_dump())
         self.session.add(model)
         await self.flush()
 
@@ -45,9 +45,6 @@ class PGAccountRepository(IAccountRepository):
         if model is None:
             raise DBModelNotFoundException()
 
-        for k, v in data.model_dump(exclude={"attributes"}, exclude_none=True).items():
-            setattr(model, k, v)
-
         self.session.add(model)
         await self.flush()
 
@@ -62,13 +59,10 @@ class PGAccountRepository(IAccountRepository):
 
     @staticmethod
     def _to_domain(model: AccountDB) -> Account:
-        attributes = []
-
         return Account(
             id=model.id,
             name=model.name,
             password_hash=model.password_hash,
             is_admin=model.is_admin,
-            attributes=attributes,
             created_at=model.created_at
         )

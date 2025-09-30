@@ -28,8 +28,7 @@ class LoginUseCase:
         token_data = AuthTokenData(
             account_id=account.id,
             name=account.name,
-            is_admin=account.is_admin,
-            attributes=account.attributes
+            is_admin=account.is_admin
         )
         return self.provider.generate_token(token_data)
 

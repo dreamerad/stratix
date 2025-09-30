@@ -2,17 +2,13 @@ from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.auth.api.rest import router as auth_router
+from src.mining.api.rest import router as mining_router
 from src.core.auth.exceptions import UnauthorizedException
 from src.core.config import settings
 from src.core.logging_setup import setup_fastapi_logging
 
 
 def setup_cors(app: FastAPI):
-    print(settings.ENVIRONMENT)
-    print(settings.ENVIRONMENT)
-    print(settings.ENVIRONMENT)
-    print(settings.ENVIRONMENT)
-    print(settings.ENVIRONMENT)
     if settings.ENVIRONMENT == "prod":
         origins = ["https://demo.0xstratix.com"]
     else:
@@ -51,6 +47,7 @@ def setup_app():
     setup_fastapi_logging(app)
 
     app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+    app.include_router(mining_router, prefix="/mining", tags=["Mining"])
 
     return app
 
