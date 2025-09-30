@@ -2,13 +2,14 @@ import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {clsx} from 'clsx'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
+import {useCurrency} from '@/shared/providers/CurrencyProvider'
 
 type CoinType = 'BTC' | 'LTC'
 
 export function DashboardHeader() {
     const {userData, logout} = useAuth()
+    const {currency, setCurrency} = useCurrency()
     const navigate = useNavigate()
-    const [selectedCoin, setSelectedCoin] = useState<CoinType>('BTC')
     const [selectedPanel, setSelectedPanel] = useState<'Dashboard' | 'Admin'>('Dashboard')
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
@@ -74,10 +75,10 @@ export function DashboardHeader() {
                         {coins.map((coin) => (
                             <button
                                 key={coin}
-                                onClick={() => setSelectedCoin(coin)}
+                                onClick={() => setCurrency(coin)}
                                 className={clsx(
                                     'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
-                                    selectedCoin === coin
+                                    currency === coin
                                         ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
                                         : 'text-text-secondary hover:text-text-primary'
                                 )}
