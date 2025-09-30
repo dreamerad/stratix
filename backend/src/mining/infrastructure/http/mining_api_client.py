@@ -2,7 +2,8 @@ from typing import List
 
 from src.core.http.api_client import HttpApiClient
 from src.mining.application.interfaces.mining_client import IMiningApiClient
-from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartHashrateResponseDTO, ChartDataPoint
+from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, \
+    WorkerDataPoint
 from src.mining.domain.enum import CurrencyType, TimeType
 
 
@@ -21,3 +22,8 @@ class HttpMiningApiClient(IMiningApiClient):
         }
         response = await self.api.request("GET", f"/api/stats/chart", params=params)
         return [ChartDataPoint(**item) for item in response.data]
+
+    async def get_workers_list(self, currency: CurrencyType) -> List[WorkerDataPoint]:
+        params = {"currency": currency.value} if currency else None
+        response = await self.api.request("GET", "/api/workers", params=params)
+        return [WorkerDataPoint(**item) for item in response.data]

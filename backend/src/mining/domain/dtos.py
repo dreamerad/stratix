@@ -26,3 +26,32 @@ class ChartDataPoint(BaseModel):
 
 class ChartHashrateResponseDTO(BaseModel):
     data: List[ChartDataPoint]
+
+# class ServerDataPoint(BaseModel):
+#     name: str
+#     ip: str
+#     port: str
+#     minerCount: int
+#     totalHasharate: float
+#     isActive: bool
+#     coinType: CurrencyType
+#     previousMinerCount: int
+#     previousHashrate: float
+#     minerChange: float
+#     hashrateChange: float
+#     minerChangePercent: float
+#     hashrateChangePercent: float
+#
+# class ChartHashrateResponseDTO(BaseModel):
+#     servers: List[ServerDataPoint]
+
+class WorkerDataPoint(BaseModel):
+    worker: str
+    hashrate: str
+    raw_hashrate: float
+    is_active: bool
+    last_seen: int
+    coinType: CurrencyType
+
+class WorkersResponseDTO(BaseModel):
+    workers: List[WorkerDataPoint]
