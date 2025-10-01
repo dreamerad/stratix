@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError, RegisterResponse } from './types'
 
-const BASE_URL = 'http://192.168.0.13:8000'
+const BASE_URL = 'https://demo.0xstratix.com'
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
