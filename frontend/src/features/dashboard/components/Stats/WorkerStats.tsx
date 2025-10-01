@@ -1,24 +1,45 @@
+import { useWorkers } from '@/features/workers/hooks/useWorkers'
+
 export function WorkerStats() {
+  const { totalWorkers, activeWorkers, inactiveWorkers, loading } = useWorkers()
+
+  if (loading) {
+    return (
+      <div className="bg-[#222222] border border-border rounded-xl p-6 h-full flex flex-col">
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-700 rounded mb-1"></div>
+          <div className="h-8 bg-gray-700 rounded mb-6"></div>
+          <div className="border-t border-border my-6"></div>
+          <div className="space-y-3 mb-6">
+            <div className="h-4 bg-gray-700 rounded"></div>
+            <div className="h-4 bg-gray-700 rounded"></div>
+            <div className="h-4 bg-gray-700 rounded"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
       <div className="bg-[#222222] border border-border rounded-xl p-6 h-full flex flex-col">
           {/* Total workers */}
           <div className="mb-6">
               <h3 className="text-text-white text-sm mb-1 font-semibold">Total workers</h3>
-              <div className="text-text-primary text-3xl">421</div>
+              <div className="text-text-primary text-3xl">{totalWorkers}</div>
           </div>
           {/* Divider */}
           <div className="border-t border-border my-6"></div>
           {/* Workers status */}
           <div className="space-y-3 mb-6">
               <div className="flex items-center justify-between">
-                  <span className="text-text-muted text-sm">402 active</span>
+                  <span className="text-text-muted text-sm">{activeWorkers} active</span>
               </div>
               <div className="flex items-center justify-between">
-                  <span className="text-text-muted text-sm">11 inactive</span>
+                  <span className="text-text-muted text-sm">{inactiveWorkers} inactive</span>
               </div>
-              <div className="flex items-center justify-between">
-                  <span className="text-text-muted text-sm">11 offline</span>
-              </div>
+              {/*<div className="flex items-center justify-between">*/}
+              {/*    <span className="text-text-muted text-sm">0 offline</span>*/}
+              {/*</div>*/}
           </div>
 
           {/* Custom fee info */}
@@ -29,7 +50,7 @@ export function WorkerStats() {
                       stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
 
-              <span className="text-white">15 workers with custom fee</span>
+              <span className="text-white">0 workers with custom fee</span>
           </div>
       </div>
   )

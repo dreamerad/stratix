@@ -1,35 +1,15 @@
-import { useEffect, useState, useMemo } from 'react'
-import { workersApi, Worker } from '../api/workers'
+import { useMemo, useState } from 'react'
 import { WorkerCard } from './WorkerCard'
 import { WorkersFilters, FilterStatus, SortBy, SortOrder } from './WorkersFilters'
-import { useCurrency } from '@/shared/providers/CurrencyProvider'
+import { useWorkers } from '../hooks/useWorkers'
 
 export function WorkersGrid() {
-  const [workers, setWorkers] = useState<Worker[]>([])
-  const [loading, setLoading] = useState(true)
-  const { currency } = useCurrency()
+  const { workers, loading, totalWorkers, activeWorkers } = useWorkers()
 
   // Фильтры и сортировка
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
   const [sortBy, setSortBy] = useState<SortBy>('name')
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
-
-  useEffect(() => {
-    const fetchWorkers = async () => {
-      try {
-        setLoading(true)
-        const response = await workersApi.getWorkers(currency)
-        setWorkers(response.workers)
-      } catch (error) {
-        console.error('Failed to fetch workers:', error)
-        setWorkers([])
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchWorkers()
-  }, [currency])
 
   const filteredAndSortedWorkers = useMemo(() => {
     let filtered = workers
@@ -63,8 +43,6 @@ export function WorkersGrid() {
     return sorted
   }, [workers, filterStatus, sortBy, sortOrder])
 
-  const activeWorkers = workers.filter(worker => worker.is_active).length
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -82,7 +60,7 @@ export function WorkersGrid() {
         onFilterStatusChange={setFilterStatus}
         onSortByChange={setSortBy}
         onSortOrderChange={setSortOrder}
-        totalWorkers={workers.length}
+        totalWorkers={totalWorkers}
         activeWorkers={activeWorkers}
       />
 

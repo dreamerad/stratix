@@ -16,7 +16,8 @@ def setup_cors(app: FastAPI):
             "http://localhost:3000",
             "http://127.0.0.1:3000",
             "http://localhost:5173",
-            "http://172.18.0.4:3000"
+            "http://192.168.0.13:8000",
+            "http://172.22.0.4:3000",
         ]
 
     app.add_middleware(
