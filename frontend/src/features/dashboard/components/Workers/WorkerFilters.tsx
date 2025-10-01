@@ -19,7 +19,7 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
   const [activeSort, setActiveSort] = useState<SortOption>('Bigger hashrate')
 
   const feeFilters: FeeFilter[] = ['All', 'Custom']
-  const statusFilters: StatusFilter[] = ['All', 'Active', 'Unactive', 'Offline']
+  const statusFilters: StatusFilter[] = ['All', 'Active', 'Unactive']
   const sortOptions: SortOption[] = ['Bigger hashrate', 'Smaller hashrate', 'Name A-Z', 'Name Z-A']
 
   const handleSearch = (value: string) => {
@@ -51,7 +51,7 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
           <div className="relative flex-1 max-w-sm">
               <input
                   type="text"
-                  placeholder="Search by name..."
+                  placeholder="Поиск по имени..."
                   value={searchQuery}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="w-full p-2 pl-4 pr-10 bg-primary-card border border-border rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-green transition-colors"
@@ -90,7 +90,7 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
 
           {/* Status Filter */}
           <div className="flex items-center gap-2">
-              <span className="text-text-muted text-sm whitespace-nowrap">Status:</span>
+              <span className="text-text-muted text-sm whitespace-nowrap">Статус:</span>
               <div className="flex items-center bg-primary-card rounded-lg p-1 border border-border">
                   {statusFilters.map((filter) => (
                       <button
@@ -111,7 +111,7 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
 
           {/* Sort */}
           <div className="flex items-center gap-2">
-              <span className="text-text-muted text-sm whitespace-nowrap">Sort by:</span>
+              <span className="text-text-muted text-sm whitespace-nowrap">Сортировка:</span>
               <div className="relative">
                   <select
                       value={activeSort}

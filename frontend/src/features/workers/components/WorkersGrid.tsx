@@ -1,47 +1,55 @@
-import { useMemo, useState } from 'react'
-import { WorkerCard } from './WorkerCard'
-import { WorkersFilters, FilterStatus, SortBy, SortOrder } from './WorkersFilters'
+import { useMemo } from 'react'
 import { useWorkers } from '../hooks/useWorkers'
+import { WorkerCard } from './WorkerCard'
 
-export function WorkersGrid() {
-  const { workers, loading, totalWorkers, activeWorkers } = useWorkers()
+interface WorkersGridProps {
+  searchQuery: string
+  feeFilter: 'All' | 'Custom'
+  statusFilter: 'All' | 'Active' | 'Unactive' | 'Offline'
+  sortOption: 'Bigger hashrate' | 'Smaller hashrate' | 'Name A-Z' | 'Name Z-A'
+}
 
-  // Фильтры и сортировка
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
-  const [sortBy, setSortBy] = useState<SortBy>('name')
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+export function WorkersGrid({ searchQuery, feeFilter, statusFilter, sortOption }: WorkersGridProps) {
+  const { workers, loading } = useWorkers()
 
   const filteredAndSortedWorkers = useMemo(() => {
     let filtered = workers
 
-    // Фильтрация по статусу
-    if (filterStatus === 'active') {
-      filtered = filtered.filter(worker => worker.is_active)
-    } else if (filterStatus === 'inactive') {
-      filtered = filtered.filter(worker => !worker.is_active)
+    // Поиск по имени
+    if (searchQuery) {
+      filtered = filtered.filter(worker =>
+        worker.worker.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    }
+
+    // Фильтр по статусу
+    if (statusFilter !== 'All') {
+      if (statusFilter === 'Active') {
+        filtered = filtered.filter(worker => worker.is_active)
+      } else if (statusFilter === 'Unactive') {
+        filtered = filtered.filter(worker => !worker.is_active)
+      }
+      // Offline пока оставляем пустым, так как нет такого поля в API
     }
 
     // Сортировка
     const sorted = [...filtered].sort((a, b) => {
-      let comparison = 0
-
-      switch (sortBy) {
-        case 'name':
-          comparison = a.worker.localeCompare(b.worker)
-          break
-        case 'hashrate':
-          comparison = a.raw_hashrate - b.raw_hashrate
-          break
-        case 'lastSeen':
-          comparison = a.last_seen - b.last_seen
-          break
+      switch (sortOption) {
+        case 'Bigger hashrate':
+          return b.raw_hashrate - a.raw_hashrate
+        case 'Smaller hashrate':
+          return a.raw_hashrate - b.raw_hashrate
+        case 'Name A-Z':
+          return a.worker.localeCompare(b.worker)
+        case 'Name Z-A':
+          return b.worker.localeCompare(a.worker)
+        default:
+          return 0
       }
-
-      return sortOrder === 'asc' ? comparison : -comparison
     })
 
     return sorted
-  }, [workers, filterStatus, sortBy, sortOrder])
+  }, [workers, searchQuery, feeFilter, statusFilter, sortOption])
 
   if (loading) {
     return (
@@ -51,34 +59,23 @@ export function WorkersGrid() {
     )
   }
 
-  return (
-    <div>
-      <WorkersFilters
-        filterStatus={filterStatus}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onFilterStatusChange={setFilterStatus}
-        onSortByChange={setSortBy}
-        onSortOrderChange={setSortOrder}
-        totalWorkers={totalWorkers}
-        activeWorkers={activeWorkers}
-      />
+  if (filteredAndSortedWorkers.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-text-muted">No workers found matching your filters</p>
+      </div>
+    )
+  }
 
-      {filteredAndSortedWorkers.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-text-muted">No workers found matching your filters</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredAndSortedWorkers.map((worker, index) => (
-            <WorkerCard
-              key={`${worker.worker}-${index}`}
-              worker={worker}
-              onClick={() => console.log('Open modal for:', worker.worker)}
-            />
-          ))}
-        </div>
-      )}
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {filteredAndSortedWorkers.map((worker, index) => (
+        <WorkerCard
+          key={`${worker.worker}-${index}`}
+          worker={worker}
+          onClick={() => console.log('Open modal for:', worker.worker)}
+        />
+      ))}
     </div>
   )
 }
