@@ -17,7 +17,7 @@ export interface ChartDataPoint {
 export const dashboardMiningApi = {
   getHashrateStats: async (currency?: 'BTC' | 'LTC'): Promise<HashrateStats> => {
     const params = currency ? `?currency=${currency}` : ''
-    const response = await apiClient.get(`/api/mining/stats/hashrate${params}`)
+    const response = await apiClient.get(`/mining/stats/hashrate${params}`)
     return response.data
   },
 
@@ -25,7 +25,7 @@ export const dashboardMiningApi = {
     const params = new URLSearchParams()
     if (currency) params.append('currency', currency)
     params.append('hours', hours.toString())
-    const response = await apiClient.get(`/api/mining/charts/?${params}`)
+    const response = await apiClient.get(`/mining/charts/?${params}`)
     return response.data
   }
 }
