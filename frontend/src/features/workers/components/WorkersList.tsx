@@ -38,17 +38,17 @@ export function WorkersList({
 }: WorkersListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
 
-  // Вспомогательные функции (объявляем до использования)
   const formatHashrate = (hashrate: number): string => {
-    if (hashrate >= 1e12) {
-      return `${(hashrate / 1e12).toFixed(2)} TH/s`
-    } else if (hashrate >= 1e9) {
-      return `${(hashrate / 1e9).toFixed(2)} GH/s`
-    } else if (hashrate >= 1e6) {
-      return `${(hashrate / 1e6).toFixed(2)} MH/s`
-    } else {
-      return `${(hashrate / 1e3).toFixed(2)} KH/s`
+    const units = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s']
+    let unitIndex = 0
+    let value = hashrate
+
+    while (value >= 1000 && unitIndex < units.length - 1) {
+      value /= 1000
+      unitIndex++
     }
+
+    return `${value.toFixed(2)} ${units[unitIndex]}`
   }
 
   const formatLastSeen = (timestamp: number): string => {
@@ -64,30 +64,24 @@ export function WorkersList({
     return 'Just now'
   }
 
-  // Группировка воркеров по базовому имени с применением фильтров
   const groupedWorkers = useMemo(() => {
-    // Сначала фильтруем воркеров
     let filteredWorkers = workers
 
-    // Фильтр по поиску
     if (searchTerm) {
       filteredWorkers = filteredWorkers.filter(worker =>
         worker.worker.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
-    // Фильтр по статусу
     if (filterStatus === 'active') {
       filteredWorkers = filteredWorkers.filter(worker => worker.is_active)
     } else if (filterStatus === 'inactive') {
       filteredWorkers = filteredWorkers.filter(worker => !worker.is_active)
     }
 
-    // Группируем отфильтрованных воркеров
     const groups: { [key: string]: Worker[] } = {}
 
     filteredWorkers.forEach(worker => {
-      // Извлекаем базовое имя воркера (до первой точки)
       const baseName = worker.worker.split('.')[0]
       if (!groups[baseName]) {
         groups[baseName] = []
@@ -95,7 +89,6 @@ export function WorkersList({
       groups[baseName].push(worker)
     })
 
-    // Преобразуем в массив WorkerGroup с расчетами
     let groupList = Object.entries(groups).map(([name, workerList]): WorkerGroup => {
       const totalHashrate = workerList.reduce((sum, w) => sum + w.raw_hashrate, 0)
       const activeCount = workerList.filter(w => w.is_active).length
@@ -110,7 +103,6 @@ export function WorkersList({
       }
     })
 
-    // Сортируем группы
     groupList.sort((a, b) => {
       let comparison = 0
 
@@ -122,7 +114,6 @@ export function WorkersList({
           comparison = a.totalHashrate - b.totalHashrate
           break
         case 'status':
-          // Сортируем по проценту активных воркеров
           const aActivePercent = a.activeCount / a.totalCount
           const bActivePercent = b.activeCount / b.totalCount
           comparison = aActivePercent - bActivePercent
