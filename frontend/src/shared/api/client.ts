@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
 import { LoginRequest, RegisterRequest, AuthResponse, User, ApiError, RegisterResponse } from './types'
 
-const BASE_URL = 'https://demo.0xstratix.com'
+const BASE_URL = 'https://demo.0xstratix.com/api'
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -37,7 +37,7 @@ export const authApi = {
     formData.append('username', data.username)
     formData.append('password', data.password)
 
-    const response = await apiClient.post<AuthResponse>('/api/auth/login', formData, {
+    const response = await apiClient.post<AuthResponse>('/auth/login', formData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -46,12 +46,12 @@ export const authApi = {
   },
 
   register: async (data: RegisterRequest): Promise<RegisterResponse> => {
-    const response = await apiClient.post<RegisterResponse>('/api/auth/register', data)
+    const response = await apiClient.post<RegisterResponse>('/auth/register', data)
     return response.data
   },
 
   getCurrentUser: async (): Promise<User> => {
-    const response = await apiClient.get<User>('/api/auth/me')
+    const response = await apiClient.get<User>('/auth/me')
     return response.data
   },
 }
