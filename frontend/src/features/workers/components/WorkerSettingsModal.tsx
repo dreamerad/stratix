@@ -1,6 +1,6 @@
-import {useState} from 'react'
-import {X} from 'lucide-react'
-import {Toggle} from '@/shared/ui'
+import { useState } from 'react'
+import { X } from 'lucide-react'
+import { Toggle } from '@/shared/ui'
 
 interface WorkerSettingsModalProps {
     isOpen: boolean
