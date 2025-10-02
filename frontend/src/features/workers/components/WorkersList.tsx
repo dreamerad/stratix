@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronRight, BarChart3, Settings } from 'lucide-react'
+import { WorkerSettingsModal } from './WorkerSettingsModal'
 
 interface Worker {
   worker: string
@@ -37,7 +38,10 @@ export function WorkersList({
   sortOrder = 'asc'
 }: WorkersListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
+  const [selectedWorkerGroup, setSelectedWorkerGroup] = useState<string>('')
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
 
+  // Вспомогательные функции (объявляем до использования)
   const formatHashrate = (hashrate: number): string => {
     const units = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s']
     let unitIndex = 0
@@ -64,24 +68,30 @@ export function WorkersList({
     return 'Just now'
   }
 
+  // Группировка воркеров по базовому имени с применением фильтров
   const groupedWorkers = useMemo(() => {
+    // Сначала фильтруем воркеров
     let filteredWorkers = workers
 
+    // Фильтр по поиску
     if (searchTerm) {
       filteredWorkers = filteredWorkers.filter(worker =>
         worker.worker.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
+    // Фильтр по статусу
     if (filterStatus === 'active') {
       filteredWorkers = filteredWorkers.filter(worker => worker.is_active)
     } else if (filterStatus === 'inactive') {
       filteredWorkers = filteredWorkers.filter(worker => !worker.is_active)
     }
 
+    // Группируем отфильтрованных воркеров
     const groups: { [key: string]: Worker[] } = {}
 
     filteredWorkers.forEach(worker => {
+      // Извлекаем базовое имя воркера (до первой точки)
       const baseName = worker.worker.split('.')[0]
       if (!groups[baseName]) {
         groups[baseName] = []
@@ -89,6 +99,7 @@ export function WorkersList({
       groups[baseName].push(worker)
     })
 
+    // Преобразуем в массив WorkerGroup с расчетами
     let groupList = Object.entries(groups).map(([name, workerList]): WorkerGroup => {
       const totalHashrate = workerList.reduce((sum, w) => sum + w.raw_hashrate, 0)
       const activeCount = workerList.filter(w => w.is_active).length
@@ -103,6 +114,7 @@ export function WorkersList({
       }
     })
 
+    // Сортируем группы
     groupList.sort((a, b) => {
       let comparison = 0
 
@@ -114,6 +126,7 @@ export function WorkersList({
           comparison = a.totalHashrate - b.totalHashrate
           break
         case 'status':
+          // Сортируем по проценту активных воркеров
           const aActivePercent = a.activeCount / a.totalCount
           const bActivePercent = b.activeCount / b.totalCount
           comparison = aActivePercent - bActivePercent
@@ -205,7 +218,8 @@ export function WorkersList({
                   className="p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
-                    console.log('Show settings for group:', group.name)
+                    setSelectedWorkerGroup(group.name)
+                    setIsSettingsModalOpen(true)
                   }}
                 >
                   <Settings className="h-4 w-4" />
@@ -251,6 +265,13 @@ export function WorkersList({
           )}
         </div>
       ))}
+
+      {/* Modal for worker settings */}
+      <WorkerSettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        workerName={selectedWorkerGroup}
+      />
     </div>
   )
 }
