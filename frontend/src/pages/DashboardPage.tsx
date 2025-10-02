@@ -16,7 +16,6 @@ export function DashboardPage() {
 
     // Состояние для фильтров
     const [searchQuery, setSearchQuery] = useState('')
-    const [feeFilter, setFeeFilter] = useState<'All' | 'Custom'>('All')
     const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Unactive' | 'Offline'>('All')
     const [sortOption, setSortOption] = useState<'Bigger hashrate' | 'Smaller hashrate' | 'Name A-Z' | 'Name Z-A'>('Bigger hashrate')
 
@@ -77,7 +76,7 @@ export function DashboardPage() {
                 {/* Фильтры воркеров */}
                 <WorkerFilters
                     onSearch={setSearchQuery}
-                    onFeeFilter={setFeeFilter}
+                    onFeeFilter={() => {}}
                     onStatusFilter={setStatusFilter}
                     onSort={setSortOption}
                 />
