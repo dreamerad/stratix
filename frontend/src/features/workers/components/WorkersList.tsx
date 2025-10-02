@@ -237,7 +237,7 @@ export function WorkersList({
           {/* Развернутый список воркеров в группе */}
           {expandedGroups.has(group.name) && (
             <div className="border-t border-border">
-              {group.workers.map((worker, index) => (
+              {group.workers.map((worker) => (
                 <div key={worker.worker} className="flex items-center justify-between p-4 border-b border-border last:border-b-0 hover:bg-hover-bg/50">
                   <div className="flex items-center gap-3 ml-7">
                     <div className={`w-2 h-2 rounded-full ${
