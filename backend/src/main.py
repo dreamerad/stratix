@@ -38,17 +38,17 @@ def setup_exceptions_handler(app: FastAPI):
 def setup_app():
     app = FastAPI(
         title=settings.PROJECT_NAME,
-        openapi_url="/openapi.json",
-        redoc_url="/redoc",
-        docs_url="/docs"
+        openapi_url="/api/openapi.json",
+        redoc_url="/api/redoc",
+        docs_url="/api/docs"
     )
 
     setup_cors(app)
     setup_exceptions_handler(app)
     setup_fastapi_logging(app)
 
-    app.include_router(auth_router, prefix="/auth", tags=["Auth"])
-    app.include_router(mining_router, prefix="/mining", tags=["Mining"])
+    app.include_router(auth_router, prefix="/api/auth", tags=["Auth"])
+    app.include_router(mining_router, prefix="/api/mining", tags=["Mining"])
 
     return app
 
