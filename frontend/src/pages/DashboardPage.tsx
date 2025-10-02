@@ -5,18 +5,42 @@ import {HashrateChart} from '@/features/dashboard/components/Chart/HashrateChart
 import {WorkerStats} from '@/features/dashboard/components/Stats/WorkerStats'
 import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettings'
 import {WorkerFilters} from '@/features/dashboard/components/Workers/WorkerFilters'
+import {WorkersList} from '@/features/workers/components/WorkersList'
+import {useWorkers} from '@/features/workers/hooks/useWorkers'
 import {Footer} from '@/shared/ui'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
-import {WorkersGrid} from '@/features/workers/components/WorkersGrid'
 
 export function DashboardPage() {
     const {isAuthenticated, isLoading} = useAuth()
+    const {workers, loading: workersLoading} = useWorkers()
 
     // Состояние для фильтров
     const [searchQuery, setSearchQuery] = useState('')
     const [feeFilter, setFeeFilter] = useState<'All' | 'Custom'>('All')
     const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Unactive' | 'Offline'>('All')
     const [sortOption, setSortOption] = useState<'Bigger hashrate' | 'Smaller hashrate' | 'Name A-Z' | 'Name Z-A'>('Bigger hashrate')
+
+    // Преобразуем фильтры в формат, понятный WorkersList
+    const convertStatusFilter = (status: string): 'all' | 'active' | 'inactive' => {
+        switch (status) {
+            case 'Active': return 'active'
+            case 'Unactive': return 'inactive'
+            case 'Offline': return 'inactive'
+            default: return 'all'
+        }
+    }
+
+    const convertSortOption = (sort: string): { sortBy: 'name' | 'hashrate' | 'status', sortOrder: 'asc' | 'desc' } => {
+        switch (sort) {
+            case 'Bigger hashrate': return { sortBy: 'hashrate', sortOrder: 'desc' }
+            case 'Smaller hashrate': return { sortBy: 'hashrate', sortOrder: 'asc' }
+            case 'Name A-Z': return { sortBy: 'name', sortOrder: 'asc' }
+            case 'Name Z-A': return { sortBy: 'name', sortOrder: 'desc' }
+            default: return { sortBy: 'name', sortOrder: 'asc' }
+        }
+    }
+
+    const { sortBy, sortOrder } = convertSortOption(sortOption)
 
     if (isLoading) {
         return (
@@ -58,12 +82,14 @@ export function DashboardPage() {
                     onSort={setSortOption}
                 />
 
-                {/* Секция воркеров */}
-                <WorkersGrid
-                    searchQuery={searchQuery}
-                    feeFilter={feeFilter}
-                    statusFilter={statusFilter}
-                    sortOption={sortOption}
+                {/* Список воркеров */}
+                <WorkersList
+                    workers={workers}
+                    loading={workersLoading}
+                    searchTerm={searchQuery}
+                    filterStatus={convertStatusFilter(statusFilter)}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
                 />
             </main>
 
