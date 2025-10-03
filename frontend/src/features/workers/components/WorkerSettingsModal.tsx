@@ -124,7 +124,7 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
                               <p className="text-gray-400 text-sm">Включить перенаправление</p>
                           </div>
                           <Toggle
-                              enabled={routeStatus}
+                              checked={routeStatus}
                               onChange={setRouteStatus}
                           />
                       </div>
