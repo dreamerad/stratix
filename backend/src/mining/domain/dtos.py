@@ -55,3 +55,14 @@ class WorkerDataPoint(BaseModel):
 
 class WorkersResponseDTO(BaseModel):
     workers: List[WorkerDataPoint]
+
+class WorkerInfoDataPoint(BaseModel):
+    timestamp: int
+    raw_hashrate: float
+    hashrate: str
+
+class WorkerHistoryResponseDTO(BaseModel):
+    worker: str
+    hours: int
+    data: List[WorkerInfoDataPoint]
+    currency: CurrencyType

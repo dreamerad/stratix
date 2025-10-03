@@ -1,13 +1,14 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 
 from src.mining.api.dependencies import AuthTokenDepend, MiningClientDepend
 from src.mining.application.use_cases.chart_hashrate import ChartHashrateUseCase
 from src.mining.application.use_cases.stats_hashrate import StatsHashrateUseCase
+from src.mining.application.use_cases.worker_history import WorkerHistoryUseCase
 from src.mining.application.use_cases.workers_list import WorkersListUseCase
 from src.mining.domain.dtos import StatsHashrateResponseDTO, StatsHashrateQueryDTO, ChartHashrateQueryDTO, \
-    ChartHashrateResponseDTO, ChartDataPoint, WorkersResponseDTO
+    ChartDataPoint, WorkersResponseDTO, WorkerHistoryResponseDTO
 from src.mining.domain.enum import CurrencyType
 
 router = APIRouter()
@@ -20,6 +21,7 @@ async def stats_hashrate(
         query: StatsHashrateQueryDTO = Depends()
 ):
     return await StatsHashrateUseCase(client).execute(query)
+
 
 @router.get("/charts/", status_code=200, response_model=List[ChartDataPoint])
 async def chart_hashrate(
@@ -37,3 +39,14 @@ async def workers(
         currency: CurrencyType
 ):
     return await WorkersListUseCase(client).execute(currency)
+
+
+@router.get("/workers/{worker}/history", status_code=200, response_model=WorkerHistoryResponseDTO)
+async def worker_history(
+        worker: str,
+        client: MiningClientDepend,
+        token_data: AuthTokenDepend,
+        hours: int = Query(24),
+        currency: CurrencyType = Query(...)
+):
+    return await WorkerHistoryUseCase(client).execute(worker, hours, currency)

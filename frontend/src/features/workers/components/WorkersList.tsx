@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ChevronDown, ChevronRight, BarChart3, Settings } from 'lucide-react'
 import { WorkerSettingsModal } from './WorkerSettingsModal'
+import { WorkerChartModal } from './WorkerChartModal'
 
 interface Worker {
   worker: string
@@ -40,6 +41,9 @@ export function WorkersList({
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
   const [selectedWorkerGroup, setSelectedWorkerGroup] = useState<string>('')
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [selectedChartWorker, setSelectedChartWorker] = useState<string>('')
+  const [isChartModalOpen, setIsChartModalOpen] = useState(false)
+  const [isGroupChart, setIsGroupChart] = useState(false)
 
   // Вспомогательные функции (объявляем до использования)
   const formatHashrate = (hashrate: number): string => {
@@ -225,12 +229,14 @@ export function WorkersList({
                   <Settings className="h-4 w-4" />
                 </button>
 
-                {/* Кнопка графика */}
+                {/* Кнопка графика группы */}
                 <button
                   className="p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
-                    console.log('Show chart for group:', group.name)
+                    setSelectedChartWorker(group.name)
+                    setIsGroupChart(true)
+                    setIsChartModalOpen(true)
                   }}
                 >
                   <BarChart3 className="h-4 w-4" />
@@ -249,6 +255,19 @@ export function WorkersList({
                       worker.is_active ? 'bg-green-500' : 'bg-red-500'
                     }`} />
                     <span className="text-text-primary font-medium">{worker.worker}</span>
+
+                    {/* Кнопка графика для конкретного воркера */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSelectedChartWorker(worker.worker)
+                        setIsGroupChart(false)
+                        setIsChartModalOpen(true)
+                      }}
+                      className="p-1 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded transition-colors"
+                    >
+                      <BarChart3 className="h-3 w-3" />
+                    </button>
                   </div>
 
                   <div className="flex items-center gap-6 text-sm">
@@ -271,6 +290,14 @@ export function WorkersList({
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
         workerName={selectedWorkerGroup}
+      />
+
+      {/* Modal for worker chart */}
+      <WorkerChartModal
+        isOpen={isChartModalOpen}
+        onClose={() => setIsChartModalOpen(false)}
+        workerName={selectedChartWorker}
+        isGroup={isGroupChart}
       />
     </div>
   )

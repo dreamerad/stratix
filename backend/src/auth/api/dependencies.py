@@ -12,7 +12,7 @@ from src.auth.infrastructure.jwt_auth_provider import JWTAuthProvider
 from src.auth.infrastructure.password_helper import PasswordHelper
 from src.core.auth.exceptions import UnauthorizedException
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 def get_auth_uow() -> IAuthUnitOfWork:
