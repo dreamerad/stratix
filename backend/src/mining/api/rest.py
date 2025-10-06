@@ -6,9 +6,10 @@ from src.mining.api.dependencies import AuthTokenDepend, MiningClientDepend
 from src.mining.application.use_cases.chart_hashrate import ChartHashrateUseCase
 from src.mining.application.use_cases.stats_hashrate import StatsHashrateUseCase
 from src.mining.application.use_cases.worker_history import WorkerHistoryUseCase
+from src.mining.application.use_cases.workers_history_all import WorkersHistoryAllUseCase
 from src.mining.application.use_cases.workers_list import WorkersListUseCase
 from src.mining.domain.dtos import StatsHashrateResponseDTO, StatsHashrateQueryDTO, ChartHashrateQueryDTO, \
-    ChartDataPoint, WorkersResponseDTO, WorkerHistoryResponseDTO
+    ChartDataPoint, WorkersResponseDTO, WorkerHistoryResponseDTO, WorkersHistoryAllResponseDTO
 from src.mining.domain.enum import CurrencyType
 
 router = APIRouter()
@@ -50,3 +51,12 @@ async def worker_history(
         currency: CurrencyType = Query(...)
 ):
     return await WorkerHistoryUseCase(client).execute(worker, hours, currency)
+
+@router.get("/workers/history/all", status_code=200, response_model=WorkersHistoryAllResponseDTO)
+async def workers(
+        client: MiningClientDepend,
+        token_data: AuthTokenDepend,
+        hours: int = Query(24),
+        currency: CurrencyType = Query(...)
+):
+    return await WorkersHistoryAllUseCase(client).execute(hours, currency)
