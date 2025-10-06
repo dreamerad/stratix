@@ -3,7 +3,8 @@ from typing import List
 from src.core.http.api_client import HttpApiClient
 from src.mining.application.interfaces.mining_client import IMiningApiClient
 from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, \
-    WorkerDataPoint, WorkerInfoDataPoint, WorkerHistoryResponseDTO
+    WorkerDataPoint, WorkerInfoDataPoint, WorkerHistoryResponseDTO, WorkersHistoryAllResponseDTO, \
+    WorkerHistoryAllDataPoint
 from src.mining.domain.enum import CurrencyType, TimeType
 
 
@@ -39,4 +40,20 @@ class HttpMiningApiClient(IMiningApiClient):
             hours=response.data["hours"],
             data=data_points,
             currency=CurrencyType(response.data["currency"])
+        )
+
+    async def get_workers_history_all(self, hours: int, currency: CurrencyType) -> WorkersHistoryAllResponseDTO:
+        params = {"currency": currency.value, "hours": hours}
+        response = await self.api.request("GET", f"/api/workers/history/all", params=params)
+
+        workers_data = {}
+        for worker_name, points in response.data["workers"].items():
+            workers_data[worker_name] = [
+                WorkerHistoryAllDataPoint(**point) for point in points
+            ]
+
+        return WorkersHistoryAllResponseDTO(
+            hours=response.data["hours"],
+            currency=response.data["currency"],
+            workers=workers_data
         )

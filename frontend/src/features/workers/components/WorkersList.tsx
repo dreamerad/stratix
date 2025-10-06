@@ -28,6 +28,7 @@ interface WorkersListProps {
   filterStatus?: 'all' | 'active' | 'inactive'
   sortBy?: 'name' | 'hashrate' | 'status'
   sortOrder?: 'asc' | 'desc'
+  historyLoading?: boolean
 }
 
 export function WorkersList({
@@ -36,7 +37,8 @@ export function WorkersList({
   searchTerm = '',
   filterStatus = 'all',
   sortBy = 'name',
-  sortOrder = 'asc'
+  sortOrder = 'asc',
+  historyLoading = false
 }: WorkersListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
   const [selectedWorkerGroup, setSelectedWorkerGroup] = useState<string>('')
@@ -45,7 +47,6 @@ export function WorkersList({
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
   const [isGroupChart, setIsGroupChart] = useState(false)
 
-  // Вспомогательные функции (объявляем до использования)
   const formatHashrate = (hashrate: number): string => {
     const units = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s']
     let unitIndex = 0
@@ -72,30 +73,24 @@ export function WorkersList({
     return 'Just now'
   }
 
-  // Группировка воркеров по базовому имени с применением фильтров
   const groupedWorkers = useMemo(() => {
-    // Сначала фильтруем воркеров
     let filteredWorkers = workers
 
-    // Фильтр по поиску
     if (searchTerm) {
       filteredWorkers = filteredWorkers.filter(worker =>
         worker.worker.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
-    // Фильтр по статусу
     if (filterStatus === 'active') {
       filteredWorkers = filteredWorkers.filter(worker => worker.is_active)
     } else if (filterStatus === 'inactive') {
       filteredWorkers = filteredWorkers.filter(worker => !worker.is_active)
     }
 
-    // Группируем отфильтрованных воркеров
     const groups: { [key: string]: Worker[] } = {}
 
     filteredWorkers.forEach(worker => {
-      // Извлекаем базовое имя воркера (до первой точки)
       const baseName = worker.worker.split('.')[0]
       if (!groups[baseName]) {
         groups[baseName] = []
@@ -103,7 +98,6 @@ export function WorkersList({
       groups[baseName].push(worker)
     })
 
-    // Преобразуем в массив WorkerGroup с расчетами
     let groupList = Object.entries(groups).map(([name, workerList]): WorkerGroup => {
       const totalHashrate = workerList.reduce((sum, w) => sum + w.raw_hashrate, 0)
       const activeCount = workerList.filter(w => w.is_active).length
@@ -118,7 +112,6 @@ export function WorkersList({
       }
     })
 
-    // Сортируем группы
     groupList.sort((a, b) => {
       let comparison = 0
 
@@ -130,7 +123,6 @@ export function WorkersList({
           comparison = a.totalHashrate - b.totalHashrate
           break
         case 'status':
-          // Сортируем по проценту активных воркеров
           const aActivePercent = a.activeCount / a.totalCount
           const bActivePercent = b.activeCount / b.totalCount
           comparison = aActivePercent - bActivePercent
@@ -231,15 +223,24 @@ export function WorkersList({
 
                 {/* Кнопка графика группы */}
                 <button
-                  className="p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors"
+                  className={`p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors ${
+                    historyLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                  disabled={historyLoading}
                   onClick={(e) => {
                     e.stopPropagation()
-                    setSelectedChartWorker(group.name)
-                    setIsGroupChart(true)
-                    setIsChartModalOpen(true)
+                    if (!historyLoading) {
+                      setSelectedChartWorker(group.name)
+                      setIsGroupChart(true)
+                      setIsChartModalOpen(true)
+                    }
                   }}
                 >
-                  <BarChart3 className="h-4 w-4" />
+                  {historyLoading ? (
+                    <div className="animate-spin rounded-full h-4 w-4 border border-text-muted border-t-transparent"></div>
+                  ) : (
+                    <BarChart3 className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>

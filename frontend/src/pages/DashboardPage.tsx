@@ -7,6 +7,7 @@ import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettin
 import {WorkerFilters} from '@/features/dashboard/components/Workers/WorkerFilters'
 import {WorkersList} from '@/features/workers/components/WorkersList'
 import {useWorkers} from '@/features/workers/hooks/useWorkers'
+import {useAllWorkersHistory} from '@/features/workers/hooks/useAllWorkersHistory'
 import {Footer} from '@/shared/ui'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
 
@@ -14,12 +15,12 @@ export function DashboardPage() {
     const {isAuthenticated, isLoading} = useAuth()
     const {workers, loading: workersLoading} = useWorkers()
 
-    // Состояние для фильтров
+    const {loading: historyLoading} = useAllWorkersHistory()
+
     const [searchQuery, setSearchQuery] = useState('')
     const [statusFilter, setStatusFilter] = useState<'All' | 'Active' | 'Unactive' | 'Offline'>('All')
     const [sortOption, setSortOption] = useState<'Bigger hashrate' | 'Smaller hashrate' | 'Name A-Z' | 'Name Z-A'>('Bigger hashrate')
 
-    // Преобразуем фильтры в формат, понятный WorkersList
     const convertStatusFilter = (status: string): 'all' | 'active' | 'inactive' => {
         switch (status) {
             case 'Active': return 'active'
@@ -89,6 +90,7 @@ export function DashboardPage() {
                     filterStatus={convertStatusFilter(statusFilter)}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
+                    historyLoading={historyLoading}
                 />
             </main>
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 
 from pydantic import BaseModel
 
@@ -66,3 +66,12 @@ class WorkerHistoryResponseDTO(BaseModel):
     hours: int
     data: List[WorkerInfoDataPoint]
     currency: CurrencyType
+
+class WorkerHistoryAllDataPoint(BaseModel):
+    timestamp: int
+    raw_hashrate: float
+
+class WorkersHistoryAllResponseDTO(BaseModel):
+    hours: int
+    currency: CurrencyType
+    workers: Dict[str, List[WorkerHistoryAllDataPoint]]

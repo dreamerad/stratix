@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { X } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
-import { workerHistoryApi, WorkerHistoryDataPoint } from '../api/workerHistory'
-import { useCurrency } from '@/shared/providers/CurrencyProvider'
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend } from 'recharts'
+import { useAllWorkersHistory } from '../hooks/useAllWorkersHistory'
 
 interface WorkerChartModalProps {
   isOpen: boolean
@@ -14,40 +13,18 @@ interface WorkerChartModalProps {
 type TimeRange = 1 | 6 | 24 | 48 | 168
 
 export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false }: WorkerChartModalProps) {
-  const [data, setData] = useState<WorkerHistoryDataPoint[]>([])
-  const [loading, setLoading] = useState(false)
-  const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>(24)
-  const { currency } = useCurrency()
+  const formatHashrate = (value: number): string => {
+    const units = ['H/s', 'KH/s', 'MH/s', 'GH/s', 'TH/s', 'PH/s', 'EH/s']
+    let unitIndex = 0
+    let displayValue = value
 
-  const timeRanges: { value: TimeRange; label: string }[] = [
-    { value: 1, label: 'Последний час' },
-    { value: 6, label: '6 часов' },
-    { value: 24, label: '24 часа' },
-    { value: 48, label: '48 часов' },
-    { value: 168, label: 'Неделя' }
-  ]
-
-  const fetchData = async () => {
-    if (!isOpen) return
-
-    setLoading(true)
-    try {
-      const response = isGroup
-        ? await workerHistoryApi.getGroupHistory(workerName, selectedTimeRange, currency)
-        : await workerHistoryApi.getWorkerHistory(workerName, selectedTimeRange, currency)
-
-      setData(response.data)
-    } catch (error) {
-      console.error('Failed to fetch worker history:', error)
-      setData([])
-    } finally {
-      setLoading(false)
+    while (displayValue >= 1000 && unitIndex < units.length - 1) {
+      displayValue /= 1000
+      unitIndex++
     }
-  }
 
-  useEffect(() => {
-    fetchData()
-  }, [isOpen, selectedTimeRange, currency, workerName, isGroup])
+    return `${displayValue.toFixed(2)} ${units[unitIndex]}`
+  }
 
   const formatTimestamp = (timestamp: number): string => {
     const date = new Date(timestamp)
@@ -60,16 +37,72 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
     }
   }
 
-  const formatHashrate = (value: number): string => {
-    if (value >= 1e12) {
-      return `${(value / 1e12).toFixed(2)} TH/s`
-    } else if (value >= 1e9) {
-      return `${(value / 1e9).toFixed(2)} GH/s`
-    } else if (value >= 1e6) {
-      return `${(value / 1e6).toFixed(2)} MH/s`
+  const {
+    loading,
+    selectedTimeRange,
+    setSelectedTimeRange,
+    getGroupData,
+    getWorkerData,
+    currency,
+    allData
+  } = useAllWorkersHistory()
+
+  const timeRanges: { value: TimeRange; label: string }[] = [
+    { value: 1, label: 'Последний час' },
+    { value: 6, label: '6 часов' },
+    { value: 24, label: '24 часа' },
+    { value: 48, label: '48 часов' },
+    { value: 168, label: 'Неделя' }
+  ]
+
+  const chartData = useMemo(() => {
+    if (isGroup) {
+      const groupWorkers = Object.keys(allData?.workers || {})
+        .filter(name => name.startsWith(workerName + '.'))
+
+      if (groupWorkers.length === 0) return []
+
+      const allTimestamps = new Set<number>()
+      groupWorkers.forEach(workerName => {
+        const workerData = getWorkerData(workerName)
+        workerData.forEach(point => allTimestamps.add(point.timestamp))
+      })
+
+      const sortedTimestamps = Array.from(allTimestamps).sort((a, b) => a - b)
+
+      return sortedTimestamps.map(timestamp => {
+        const dataPoint: any = { timestamp }
+
+        groupWorkers.forEach(workerName => {
+          const workerData = getWorkerData(workerName)
+          const point = workerData.find(p => p.timestamp === timestamp)
+          dataPoint[workerName] = point ? point.raw_hashrate : 0
+        })
+
+        return dataPoint
+      })
     } else {
-      return `${(value / 1e3).toFixed(2)} KH/s`
+      const workerData = getWorkerData(workerName)
+      return workerData.map(point => ({
+        ...point,
+        hashrate: formatHashrate(point.raw_hashrate)
+      }))
     }
+  }, [isGroup, workerName, getGroupData, getWorkerData, allData])
+
+  const groupWorkers = useMemo(() => {
+    if (!isGroup || !allData) return []
+    return Object.keys(allData.workers)
+      .filter(name => name.startsWith(workerName + '.'))
+  }, [isGroup, workerName, allData])
+
+  const getWorkerColor = (index: number): string => {
+    const colors = [
+      '#00FF26', '#FF6B35', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+      '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9', '#F8C471',
+      '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2', '#A9DFBF', '#FAD7A0'
+    ]
+    return colors[index % colors.length]
   }
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -90,7 +123,7 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#1a1a1a] border border-gray-600 rounded-xl w-full max-w-4xl shadow-2xl">
+      <div className="bg-[#1a1a1a] border border-gray-600 rounded-xl w-full max-w-5xl shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-600">
           <div>
@@ -127,18 +160,18 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
         </div>
 
         {/* Chart */}
-        <div className="p-6" style={{ height: '400px' }}>
+        <div className="p-6" style={{ height: '450px' }}>
           {loading ? (
             <div className="flex items-center justify-center h-full">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00FF26]"></div>
             </div>
-          ) : data.length === 0 ? (
+          ) : chartData.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <p className="text-gray-400">Нет данных для отображения</p>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data}>
+              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 60 }}>
                 <XAxis
                   dataKey="timestamp"
                   tickFormatter={formatTimestamp}
@@ -155,19 +188,52 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                   width={80}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Line
-                  type="monotone"
-                  dataKey="raw_hashrate"
-                  stroke="#00FF26"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{
-                    r: 4,
-                    fill: '#00FF26',
-                    stroke: '#00FF26',
-                    strokeWidth: 0
+                <Legend
+                  verticalAlign="bottom"
+                  height={60}
+                  iconType="line"
+                  wrapperStyle={{
+                    paddingTop: '20px',
+                    color: '#9CA3AF',
+                    fontSize: '12px',
+                    maxHeight: '60px',
+                    overflowY: 'auto'
                   }}
                 />
+                {isGroup ? (
+                  groupWorkers.map((worker, index) => (
+                    <Line
+                      key={worker}
+                      type="monotone"
+                      dataKey={worker}
+                      stroke={getWorkerColor(index)}
+                      strokeWidth={2}
+                      dot={false}
+                      name={worker}
+                      activeDot={{
+                        r: 3,
+                        fill: getWorkerColor(index),
+                        stroke: getWorkerColor(index),
+                        strokeWidth: 0
+                      }}
+                    />
+                  ))
+                ) : (
+                  <Line
+                    type="monotone"
+                    dataKey="raw_hashrate"
+                    stroke="#00FF26"
+                    strokeWidth={2}
+                    dot={false}
+                    name={`Хешрейт воркера ${workerName}`}
+                    activeDot={{
+                      r: 4,
+                      fill: '#00FF26',
+                      stroke: '#00FF26',
+                      strokeWidth: 0
+                    }}
+                  />
+                )}
               </LineChart>
             </ResponsiveContainer>
           )}
