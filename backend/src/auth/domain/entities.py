@@ -23,3 +23,10 @@ class AuthToken(Token):
 
 class AuthTokenData(TokenData):
     pass
+
+class ChangePasswordDTO(BaseModel):
+    current_password: str
+    new_password: str
+
+class ChangeUsernameDTO(BaseModel):
+    new_name: str

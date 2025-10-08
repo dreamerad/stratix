@@ -1,6 +1,7 @@
-import {create} from 'zustand'
-import {authApi} from '@/shared/api/client'
-import {LoginRequest, RegisterRequest, User} from '@/shared/api/types'
+import { create } from 'zustand'
+import { authApi } from '@/shared/api/client'
+import { authProfileApi } from '@/features/auth/api/authApi'
+import { LoginRequest, RegisterRequest, User } from '@/shared/api/types'
 
 interface AuthState {
     user: User | null
@@ -15,6 +16,8 @@ interface AuthState {
     logout: () => void
     clearError: () => void
     checkAuth: () => Promise<void>
+    changePassword: (currentPassword: string, newPassword: string) => Promise<void>
+    changeUsername: (newUsername: string) => Promise<void>
 }
 
 interface UserData {
@@ -33,6 +36,7 @@ const decodeToken = (token: string): UserData | null => {
         return null
     }
 }
+
 export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     userData: null,
@@ -103,7 +107,6 @@ export const useAuthStore = create<AuthState>((set) => ({
             isAuthenticated: false,
             error: null
         })
-
     },
 
     clearError: () => {
@@ -124,6 +127,42 @@ export const useAuthStore = create<AuthState>((set) => ({
         } catch (error) {
             localStorage.removeItem('access_token')
             set({isLoading: false, isAuthenticated: false, user: null, userData: null})
+        }
+    },
+
+    changePassword: async (currentPassword, newPassword) => {
+        set({ isLoading: true, error: null })
+
+        try {
+            await authProfileApi.changePassword({
+                current_password: currentPassword,
+                new_password: newPassword
+            })
+            set({ isLoading: false })
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.detail || 'Failed to change password'
+            set({ error: errorMessage, isLoading: false })
+            throw error
+        }
+    },
+
+    changeUsername: async (newUsername) => {
+        set({ isLoading: true, error: null })
+
+        try {
+            const response = await authProfileApi.changeUsername({
+                new_name: newUsername
+            })
+
+            // Обновляем userData с новым именем
+            set((state) => ({
+                isLoading: false,
+                userData: state.userData ? { ...state.userData, name: response.name } : null
+            }))
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.detail || 'Failed to change username'
+            set({ error: errorMessage, isLoading: false })
+            throw error
         }
     }
 }))
