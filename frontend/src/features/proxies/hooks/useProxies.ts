@@ -28,10 +28,12 @@ export function useProxies() {
         } finally {
             setLoading(false)
         }
-    }, [toast])
+    }, [])
 
     const updateProxyStatus = useCallback(async (proxyId: string, status: 'active' | 'inactive') => {
         try {
+            await proxiesApi.updateProxyStatus(proxyId, status)
+
             setProxies(prev => prev.map(proxy =>
                 proxy.proxy_id === proxyId
                     ? {...proxy, status, updated_at: new Date().toISOString()}
@@ -63,15 +65,17 @@ export function useProxies() {
             const result = await proxiesApi.deleteProxy(proxyId)
 
             if (result.success) {
+                const deletedProxy = proxies.find(p => p.proxy_id === proxyId)
+
                 setProxies(prev => prev.filter(proxy => proxy.proxy_id !== proxyId))
 
                 setStats(prev => {
-                    if (!prev) return null
+                    if (!prev || !deletedProxy) return null
                     return {
                         ...prev,
                         total: prev.total - 1,
-                        active: prev.active - (proxies.find(p => p.proxy_id === proxyId)?.status === 'active' ? 1 : 0),
-                        inactive: prev.inactive - (proxies.find(p => p.proxy_id === proxyId)?.status === 'inactive' ? 1 : 0)
+                        active: prev.active - (deletedProxy.status === 'active' ? 1 : 0),
+                        inactive: prev.inactive - (deletedProxy.status === 'inactive' ? 1 : 0)
                     }
                 })
 
