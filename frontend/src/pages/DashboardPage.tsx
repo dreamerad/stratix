@@ -72,9 +72,9 @@ export function DashboardPage() {
                 </div>
 
                 {/* Блоки с тоглами */}
-                <div className="mb-6">
-                    <FeeSettings/>
-                </div>
+                {/*<div className="mb-6">*/}
+                {/*    <FeeSettings/>*/}
+                {/*</div>*/}
 
                 {/* Фильтры воркеров */}
                 <WorkerFilters

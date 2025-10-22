@@ -183,29 +183,29 @@ export function HashrateChart() {
 
                         {/* Кнопки управления */}
                         <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => setShowSettings(!showSettings)}
-                                className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"
-                                title="Настройки"
-                            >
-                                <Settings className="h-4 w-4" />
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={() => setShowSettings(!showSettings)}*/}
+                            {/*    className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
+                            {/*    title="Настройки"*/}
+                            {/*>*/}
+                            {/*    <Settings className="h-4 w-4" />*/}
+                            {/*</button>*/}
 
-                            <button
-                                onClick={showBrush ? resetZoom : enableZoom}
-                                className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"
-                                title={showBrush ? "Сбросить зум" : "Включить зум"}
-                            >
-                                {showBrush ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={showBrush ? resetZoom : enableZoom}*/}
+                            {/*    className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
+                            {/*    title={showBrush ? "Сбросить зум" : "Включить зум"}*/}
+                            {/*>*/}
+                            {/*    {showBrush ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}*/}
+                            {/*</button>*/}
 
-                            <button
-                                onClick={exportChart}
-                                className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"
-                                title="Экспорт данных"
-                            >
-                                <Download className="h-4 w-4" />
-                            </button>
+                            {/*<button*/}
+                            {/*    onClick={exportChart}*/}
+                            {/*    className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
+                            {/*    title="Экспорт данных"*/}
+                            {/*>*/}
+                            {/*    <Download className="h-4 w-4" />*/}
+                            {/*</button>*/}
 
                         </div>
                     </div>

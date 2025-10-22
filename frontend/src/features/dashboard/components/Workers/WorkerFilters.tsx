@@ -68,25 +68,25 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
           </div>
 
           {/* Fee Filter */}
-          <div className="flex items-center gap-2">
-              <span className="text-text-muted text-sm whitespace-nowrap">Fee:</span>
-              <div className="flex items-center bg-primary-card rounded-lg p-1 border border-border">
-                  {feeFilters.map((filter) => (
-                      <button
-                          key={filter}
-                          onClick={() => handleFeeFilter(filter)}
-                          className={clsx(
-                              'px-3 py-1 text-sm font-medium rounded-md transition-colors whitespace-nowrap',
-                              activeFeeFilter === filter
-                                  ? 'text-[#00FF26] bg-[#00FF26]/10'
-                                  : 'text-text-muted hover:text-text-primary'
-                          )}
-                      >
-                          {filter}
-                      </button>
-                  ))}
-              </div>
-          </div>
+          {/*<div className="flex items-center gap-2">*/}
+          {/*    <span className="text-text-muted text-sm whitespace-nowrap">Fee:</span>*/}
+          {/*    <div className="flex items-center bg-primary-card rounded-lg p-1 border border-border">*/}
+          {/*        {feeFilters.map((filter) => (*/}
+          {/*            <button*/}
+          {/*                key={filter}*/}
+          {/*                onClick={() => handleFeeFilter(filter)}*/}
+          {/*                className={clsx(*/}
+          {/*                    'px-3 py-1 text-sm font-medium rounded-md transition-colors whitespace-nowrap',*/}
+          {/*                    activeFeeFilter === filter*/}
+          {/*                        ? 'text-[#00FF26] bg-[#00FF26]/10'*/}
+          {/*                        : 'text-text-muted hover:text-text-primary'*/}
+          {/*                )}*/}
+          {/*            >*/}
+          {/*                {filter}*/}
+          {/*            </button>*/}
+          {/*        ))}*/}
+          {/*    </div>*/}
+          {/*</div>*/}
 
           {/* Status Filter */}
           <div className="flex items-center gap-2">

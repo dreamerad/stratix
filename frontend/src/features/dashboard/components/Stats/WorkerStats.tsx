@@ -43,15 +43,15 @@ export function WorkerStats() {
           </div>
 
           {/* Custom fee info */}
-          <div className="flex items-center gap-2 text-text-muted text-sm mt-auto">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M15.8335 4.16683L4.16683 15.8335M7.50016 5.41683C7.50016 6.56742 6.56742 7.50016 5.41683 7.50016C4.26624 7.50016 3.3335 6.56742 3.3335 5.41683C3.3335 4.26624 4.26624 3.3335 5.41683 3.3335C6.56742 3.3335 7.50016 4.26624 7.50016 5.41683ZM16.6668 14.5835C16.6668 15.7341 15.7341 16.6668 14.5835 16.6668C13.4329 16.6668 12.5002 15.7341 12.5002 14.5835C12.5002 13.4329 13.4329 12.5002 14.5835 12.5002C15.7341 12.5002 16.6668 13.4329 16.6668 14.5835Z"
-                      stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+          {/*<div className="flex items-center gap-2 text-text-muted text-sm mt-auto">*/}
+          {/*    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+          {/*        <path*/}
+          {/*            d="M15.8335 4.16683L4.16683 15.8335M7.50016 5.41683C7.50016 6.56742 6.56742 7.50016 5.41683 7.50016C4.26624 7.50016 3.3335 6.56742 3.3335 5.41683C3.3335 4.26624 4.26624 3.3335 5.41683 3.3335C6.56742 3.3335 7.50016 4.26624 7.50016 5.41683ZM16.6668 14.5835C16.6668 15.7341 15.7341 16.6668 14.5835 16.6668C13.4329 16.6668 12.5002 15.7341 12.5002 14.5835C12.5002 13.4329 13.4329 12.5002 14.5835 12.5002C15.7341 12.5002 16.6668 13.4329 16.6668 14.5835Z"*/}
+          {/*            stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>*/}
+          {/*    </svg>*/}
 
-              <span className="text-white">0 workers with custom fee</span>
-          </div>
+          {/*    <span className="text-white">0 workers with custom fee</span>*/}
+          {/*</div>*/}
       </div>
   )
 }
