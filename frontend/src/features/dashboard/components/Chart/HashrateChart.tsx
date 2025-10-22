@@ -1,7 +1,8 @@
 import {useEffect, useState} from 'react'
-import {Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Brush} from 'recharts'
+import {Area, AreaChart, Brush, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import {dashboardMiningApi} from '../../api/mining'
 import {useCurrency} from '@/shared/providers/CurrencyProvider'
+
 // import {ZoomIn, ZoomOut, Download, Settings} from 'lucide-react'
 
 function CustomTooltip({active, payload}: any) {
@@ -18,7 +19,8 @@ function CustomTooltip({active, payload}: any) {
                 <p className="text-white text-sm font-semibold">
                     {data.hashrate} PH/s
                 </p>
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-[#00FF26]/30 to-transparent mt-1"></div>
+                <div
+                    className="w-full h-px bg-gradient-to-r from-transparent via-[#00FF26]/30 to-transparent mt-1"></div>
             </div>
         )
     }
@@ -26,7 +28,7 @@ function CustomTooltip({active, payload}: any) {
 }
 
 function CustomDot(props: any) {
-    const { cx, cy, payload } = props;
+    const {cx, cy, payload} = props;
     if (!payload) return null;
 
     return (
@@ -69,10 +71,11 @@ export function HashrateChart() {
     const [selectedPeriod, setSelectedPeriod] = useState<24 | 168 | 720>(24)
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
     const [isFullscreen, setIsFullscreen] = useState(false)
-    const [zoomDomain, setZoomDomain] = useState<{startIndex?: number, endIndex?: number}>({})
-    const [showBrush, setShowBrush] = useState(false)
-    const [showSettings, setShowSettings] = useState(false)
-
+    const [zoomDomain, setZoomDomain] = useState<{ startIndex?: number, endIndex?: number }>({})
+    // const [showBrush, setShowBrush] = useState(false)
+    // const [showSettings, setShowSettings] = useState(false)
+    const showBrush = false
+    const showSettings = false
     // Настройки графика
     const [chartSettings, setChartSettings] = useState({
         showGrid: true,
@@ -161,7 +164,8 @@ export function HashrateChart() {
                 <div className="flex justify-center items-center h-64">
                     <div className="relative">
                         <div className="animate-spin rounded-full h-8 w-8 border-2 border-[#00FF26]/20"></div>
-                        <div className="animate-spin rounded-full h-8 w-8 border-2 border-t-[#00FF26] absolute top-0"></div>
+                        <div
+                            className="animate-spin rounded-full h-8 w-8 border-2 border-t-[#00FF26] absolute top-0"></div>
                     </div>
                 </div>
             </div>
@@ -169,14 +173,17 @@ export function HashrateChart() {
     }
 
     return (
-        <div className={`bg-[#222222] border border-border rounded-xl p-4 md:p-6 relative overflow-hidden transition-all duration-300 ${
-            isFullscreen ? 'fixed inset-4 z-50 shadow-2xl' : ''
-        }`}>
+        <div
+            className={`bg-[#222222] border border-border rounded-xl p-4 md:p-6 relative overflow-hidden transition-all duration-300 ${
+                isFullscreen ? 'fixed inset-4 z-50 shadow-2xl' : ''
+            }`}>
             {/* Фоновый градиент */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#00FF26]/5 via-transparent to-[#00FF26]/3 pointer-events-none"></div>
+            <div
+                className="absolute inset-0 bg-gradient-to-br from-[#00FF26]/5 via-transparent to-[#00FF26]/3 pointer-events-none"></div>
 
             {/* Заголовок с кнопками управления */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6 relative z-10">
+            <div
+                className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4 md:mb-6 relative z-10">
                 <div className="flex-1">
                     <div className="flex items-center justify-between">
                         <h3 className="text-text-white text-sm mb-1 font-medium">Total hashrate</h3>
@@ -215,9 +222,9 @@ export function HashrateChart() {
                             {currentHashrate} PH/s
                         </span>
                         <span className={`text-sm flex items-center gap-2 ${
-                            trend === 'up' ? 'text-[#00FF26]' : 
-                            trend === 'down' ? 'text-red-400' : 
-                            'text-gray-400'
+                            trend === 'up' ? 'text-[#00FF26]' :
+                                trend === 'down' ? 'text-red-400' :
+                                    'text-gray-400'
                         }`}>
                             {currency}
                             <svg width="16" height="16" className={`md:w-5 md:h-5 transition-transform ${
@@ -225,14 +232,16 @@ export function HashrateChart() {
                             }`} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M13.3334 5.8335H18.3334M18.3334 5.8335V10.8335M18.3334 5.8335L11.2501 12.9168L7.08341 8.75016L1.66675 14.1668"
-                                    stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+                                    strokeLinejoin="round"/>
                             </svg>
                         </span>
                     </div>
                 </div>
 
                 {/* Переключатель периодов */}
-                <div className="flex items-center bg-primary-bg-secondary rounded-lg p-1 h-[36px] md:h-[40px] w-full sm:w-auto border border-border/50">
+                <div
+                    className="flex items-center bg-primary-bg-secondary rounded-lg p-1 h-[36px] md:h-[40px] w-full sm:w-auto border border-border/50">
                     {Object.entries(periodMap).map(([period, hours]) => (
                         <button
                             key={period}
@@ -258,7 +267,7 @@ export function HashrateChart() {
                             <input
                                 type="checkbox"
                                 checked={chartSettings.showGrid}
-                                onChange={(e) => setChartSettings(prev => ({ ...prev, showGrid: e.target.checked }))}
+                                onChange={(e) => setChartSettings(prev => ({...prev, showGrid: e.target.checked}))}
                                 className="w-4 h-4 accent-[#00FF26]"
                             />
                             Показать сетку
@@ -268,7 +277,7 @@ export function HashrateChart() {
                             <input
                                 type="checkbox"
                                 checked={chartSettings.showArea}
-                                onChange={(e) => setChartSettings(prev => ({ ...prev, showArea: e.target.checked }))}
+                                onChange={(e) => setChartSettings(prev => ({...prev, showArea: e.target.checked}))}
                                 className="w-4 h-4 accent-[#00FF26]"
                             />
                             Заливка области
@@ -278,7 +287,7 @@ export function HashrateChart() {
                             <input
                                 type="checkbox"
                                 checked={chartSettings.showAnimation}
-                                onChange={(e) => setChartSettings(prev => ({ ...prev, showAnimation: e.target.checked }))}
+                                onChange={(e) => setChartSettings(prev => ({...prev, showAnimation: e.target.checked}))}
                                 className="w-4 h-4 accent-[#00FF26]"
                             />
                             Анимации
@@ -292,7 +301,10 @@ export function HashrateChart() {
                                 max="5"
                                 step="0.5"
                                 value={chartSettings.lineThickness}
-                                onChange={(e) => setChartSettings(prev => ({ ...prev, lineThickness: parseFloat(e.target.value) }))}
+                                onChange={(e) => setChartSettings(prev => ({
+                                    ...prev,
+                                    lineThickness: parseFloat(e.target.value)
+                                }))}
                                 className="flex-1 accent-[#00FF26]"
                             />
                             <span className="w-6 text-xs">{chartSettings.lineThickness}</span>
@@ -308,7 +320,7 @@ export function HashrateChart() {
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={data}
-                        margin={{ top: 10, right: 10, left: 10, bottom: showBrush ? 50 : 10 }}
+                        margin={{top: 10, right: 10, left: 10, bottom: showBrush ? 50 : 10}}
                         onMouseMove={(e) => {
                             if (e && e.activeTooltipIndex !== undefined) {
                                 setHoveredPoint(e.activeTooltipIndex)
@@ -354,7 +366,7 @@ export function HashrateChart() {
                         <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#666', fontSize: 12, fontWeight: 500 }}
+                            tick={{fill: '#666', fontSize: 12, fontWeight: 500}}
                             width={60}
                             tickFormatter={(value) => `${value}`}
                             domain={zoomDomain.startIndex !== undefined ? ['dataMin', 'dataMax'] : [0, 'dataMax + 1']}
@@ -364,7 +376,7 @@ export function HashrateChart() {
                             dataKey="time"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: '#666', fontSize: 12, fontWeight: 500 }}
+                            tick={{fill: '#666', fontSize: 12, fontWeight: 500}}
                             interval="preserveStartEnd"
                         />
 
@@ -376,7 +388,7 @@ export function HashrateChart() {
                             strokeWidth={chartSettings.lineThickness}
                             fill="url(#areaGradient)"
                             dot={false}
-                            activeDot={<CustomDot />}
+                            activeDot={<CustomDot/>}
                             filter={chartSettings.showAnimation ? "url(#glow)" : undefined}
                             animationDuration={chartSettings.showAnimation ? 1000 : 0}
                         />
@@ -407,8 +419,8 @@ export function HashrateChart() {
                                 strokeDasharray: '4 4',
                                 opacity: 0.6
                             }}
-                            position={{ x: undefined, y: -10 }}
-                            allowEscapeViewBox={{ x: false, y: true }}
+                            position={{x: undefined, y: -10}}
+                            allowEscapeViewBox={{x: false, y: true}}
                         />
                     </AreaChart>
                 </ResponsiveContainer>

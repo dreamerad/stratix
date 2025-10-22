@@ -1,18 +1,17 @@
 import { useState } from 'react'
 import { clsx } from 'clsx'
 
-type FeeFilter = 'All' | 'Custom'
+// type FeeFilter = 'All' | 'Custom'
 type StatusFilter = 'All' | 'Active' | 'Unactive' | 'Offline'
 type SortOption = 'Bigger hashrate' | 'Smaller hashrate' | 'Name A-Z' | 'Name Z-A'
 
 interface WorkerFiltersProps {
   onSearch?: (query: string) => void
-  onFeeFilter?: (filter: FeeFilter) => void
   onStatusFilter?: (filter: StatusFilter) => void
   onSort?: (sort: SortOption) => void
 }
 
-export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }: WorkerFiltersProps) {
+export function WorkerFilters({ onSearch, onStatusFilter, onSort }: WorkerFiltersProps) {
   const [searchQuery, setSearchQuery] = useState('')
   // const [activeFeeFilter, setActiveFeeFilter] = useState<FeeFilter>('All')
   const [activeStatusFilter, setActiveStatusFilter] = useState<StatusFilter>('All')
