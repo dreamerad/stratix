@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useState} from 'react'
 import {proxiesApi, type Proxy, type ProxyStats} from '../api/proxies'
-import {useToast} from '@/shared/ui'
+import {useToastHelpers} from '@/shared/ui'
 
 export function useProxies() {
     const [proxies, setProxies] = useState<Proxy[]>([])
     const [stats, setStats] = useState<ProxyStats | null>(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
-    const {showToast} = useToast()
+    const toast = useToastHelpers()
 
     const fetchProxies = useCallback(async () => {
         try {
@@ -21,19 +21,17 @@ export function useProxies() {
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ошибка загрузки прокси'
             setError(errorMessage)
-            showToast({message: errorMessage, type: 'error'})
+            toast.error('Ошибка загрузки', errorMessage)
 
             setProxies([])
             setStats({_id: null, total: 0, active: 0, inactive: 0})
         } finally {
             setLoading(false)
         }
-    }, [showToast])
+    }, [toast])
 
     const updateProxyStatus = useCallback(async (proxyId: string, status: 'active' | 'inactive') => {
         try {
-            // await proxiesApi.updateProxyStatus(proxyId, status)
-
             setProxies(prev => prev.map(proxy =>
                 proxy.proxy_id === proxyId
                     ? {...proxy, status, updated_at: new Date().toISOString()}
@@ -50,15 +48,15 @@ export function useProxies() {
                 }
             })
 
-            showToast({
-                message: `Прокси ${proxyId} ${status === 'active' ? 'активирован' : 'деактивирован'}`,
-                type: 'success'
-            })
+            toast.success(
+                'Статус изменен',
+                `Прокси ${proxyId} ${status === 'active' ? 'активирован' : 'деактивирован'}`
+            )
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Ошибка обновления статуса'
-            showToast({message: errorMessage, type: 'error'})
+            toast.error('Ошибка', errorMessage)
         }
-    }, [showToast])
+    }, [toast])
 
     const deleteProxy = useCallback(async (proxyId: string) => {
         try {
@@ -77,16 +75,16 @@ export function useProxies() {
                     }
                 })
 
-                showToast({message: `Proxy ${proxyId} deleted successfully`, type: 'success'})
+                toast.success('Удалено', `Proxy ${proxyId} deleted successfully`)
                 return true
             }
             return false
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : 'Error deleting proxy'
-            showToast({message: errorMessage, type: 'error'})
+            toast.error('Ошибка', errorMessage)
             return false
         }
-    }, [showToast, proxies])
+    }, [toast, proxies])
 
     useEffect(() => {
         fetchProxies()
