@@ -91,37 +91,37 @@ export function HashrateChart() {
         setIsFullscreen(!isFullscreen)
     }
 
-    const resetZoom = () => {
-        setZoomDomain({})
-        setShowBrush(false)
-    }
+    // const resetZoom = () => {
+    //     setZoomDomain({})
+    //     setShowBrush(false)
+    // }
+    //
+    // const enableZoom = () => {
+    //     setShowBrush(true)
+    // }
 
-    const enableZoom = () => {
-        setShowBrush(true)
-    }
+    // const exportChart = () => {
+    //     const exportData = {
+    //         currency,
+    //         period: selectedPeriod,
+    //         timestamp: new Date().toISOString(),
+    //         data: data.map(d => ({
+    //             time: d.time,
+    //             hashrate: d.hashrate,
+    //             raw: d.raw
+    //         }))
+    //     }
 
-    const exportChart = () => {
-        const exportData = {
-            currency,
-            period: selectedPeriod,
-            timestamp: new Date().toISOString(),
-            data: data.map(d => ({
-                time: d.time,
-                hashrate: d.hashrate,
-                raw: d.raw
-            }))
-        }
-
-        const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-            type: 'application/json'
-        })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `hashrate-${currency}-${selectedPeriod}h-${new Date().getTime()}.json`
-        a.click()
-        URL.revokeObjectURL(url)
-    }
+    //     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+    //         type: 'application/json'
+    //     })
+    //     const url = URL.createObjectURL(blob)
+    //     const a = document.createElement('a')
+    //     a.href = url
+    //     a.download = `hashrate-${currency}-${selectedPeriod}h-${new Date().getTime()}.json`
+    //     a.click()
+    //     URL.revokeObjectURL(url)
+    // }
 
     useEffect(() => {
         const fetchChartData = async () => {
