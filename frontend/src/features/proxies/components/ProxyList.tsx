@@ -148,10 +148,10 @@ export function ProxyList({ searchTerm, filterStatus, sortBy }: ProxyListProps) 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose}
-        onConfirm={() => handleConfirmDelete(deletingProxyId!)}
+        onConfirm={() => handleConfirmDelete(deletingProxyId || '')}
         title="Delete Proxy"
         description="Are you sure you want to delete proxy"
-        itemName={deletingProxyId}
+        itemName={deletingProxyId || undefined}
         warningText="This action cannot be undone. All associated configurations will be permanently removed."
         confirmText="Delete Proxy"
         confirmVariant="danger"
