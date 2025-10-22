@@ -140,25 +140,12 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         <AnimatedModal
             isOpen={isOpen}
             onClose={handleClose}
-            title="Редактирование прокси"
+            title={proxyId}
             maxWidth="lg"
             className="max-h-[95vh] overflow-hidden w-full max-w-4xl flex flex-col"
         >
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
-                {/* Proxy ID Section */}
-                <div className="bg-[#222222] rounded-lg p-6 border border-border">
-                    <h2 className="text-text-primary text-lg font-semibold mb-4">Proxy Configuration</h2>
-                    <div className="space-y-2">
-                        <label className="block text-text-muted text-sm font-medium">Proxy ID</label>
-                        <input
-                            type="text"
-                            value={proxyId}
-                            onChange={(e) => setProxyId(e.target.value)}
-                            className="w-full p-3 bg-primary-bg border border-border rounded-lg text-text-primary focus:outline-none focus:border-accent-green transition-colors"
-                            placeholder="Enter unique proxy ID"
-                        />
-                    </div>
-                </div>
+
 
                 {/* Fee Settings Section */}
                 <div className="bg-[#222222] rounded-lg p-6 border border-border">

@@ -17,7 +17,7 @@ function CustomTooltip({active, payload}: any) {
                     </p>
                 </div>
                 <p className="text-white text-sm font-semibold">
-                    {data.hashrate} PH/s
+                    {data.hashrate} {data.currency === 'BTC' ? 'TH/s' : 'MH/s'}
                 </p>
                 <div
                     className="w-full h-px bg-gradient-to-r from-transparent via-[#00FF26]/30 to-transparent mt-1"></div>
@@ -80,7 +80,7 @@ export function HashrateChart() {
     const [chartSettings, setChartSettings] = useState({
         showGrid: true,
         showArea: true,
-        lineThickness: 2.5,
+        lineThickness: 1.5,
         showAnimation: true
     })
 
@@ -133,12 +133,20 @@ export function HashrateChart() {
                 const chartData = await dashboardMiningApi.getChartData(currency, selectedPeriod)
 
                 const formattedData = chartData.map((point, index) => ({
-                    time: new Date(point.timestamp).toLocaleTimeString('ru-RU', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    }),
-                    hashrate: Math.round(point.rawHashrate / 1e15 * 100) / 100,
+                    time: selectedPeriod === 720
+                        ? new Date(point.timestamp).toLocaleDateString('ru-RU', {
+                            day: '2-digit',
+                            month: '2-digit'
+                        })
+                        : new Date(point.timestamp).toLocaleTimeString('ru-RU', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }),
+                    hashrate: currency === 'BTC'
+                        ? Math.round(point.rawHashrate / 1e12 * 100) / 100  // Терахеш для BTC
+                        : Math.round(point.rawHashrate / 1e6 * 100) / 100,  // Мегахеш для LTC
                     raw: point.rawHashrate,
+                    currency: currency,
                     index
                 }))
 
@@ -219,7 +227,7 @@ export function HashrateChart() {
 
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                         <span className="text-text-primary font-[600] text-2xl md:text-3xl">
-                            {currentHashrate} PH/s
+                            {currentHashrate} {currency === 'BTC' ? 'TH/s' : 'MH/s'}
                         </span>
                         <span className={`text-sm flex items-center gap-2 ${
                             trend === 'up' ? 'text-[#00FF26]' :
@@ -357,9 +365,9 @@ export function HashrateChart() {
                         {chartSettings.showGrid && (
                             <CartesianGrid
                                 strokeDasharray="3 3"
-                                stroke="#333333"
-                                strokeOpacity={0.3}
-                                vertical={false}
+                                stroke="#666666"
+                                strokeOpacity={0.6}
+                                vertical={true}
                             />
                         )}
 
@@ -424,32 +432,6 @@ export function HashrateChart() {
                         />
                     </AreaChart>
                 </ResponsiveContainer>
-            </div>
-
-            {/* Индикаторы статистики */}
-            <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/30">
-                <div className="flex items-center gap-4 text-xs text-text-muted">
-                    <span className="flex items-center gap-1">
-                        <div className="w-2 h-2 rounded-full bg-[#00FF26]"></div>
-                        Hashrate
-                    </span>
-                    {data.length > 0 && (
-                        <span>
-                            {data.length} точек данных
-                        </span>
-                    )}
-                    {showBrush && zoomDomain.startIndex !== undefined && (
-                        <span className="text-[#00FF26]">
-                            Зум активен ({zoomDomain.startIndex}-{zoomDomain.endIndex})
-                        </span>
-                    )}
-                </div>
-
-                {hoveredPoint !== null && (
-                    <div className="text-xs text-text-muted">
-                        Точка {hoveredPoint + 1} из {data.length}
-                    </div>
-                )}
             </div>
 
             {/* Overlay для полноэкранного режима */}

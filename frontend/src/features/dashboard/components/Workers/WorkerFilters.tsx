@@ -51,7 +51,7 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
                 <div className="relative flex-1 max-w-sm">
                     <input
                         type="text"
-                        placeholder="Поиск по имени..."
+                        placeholder="Search by name..."
                         value={searchQuery}
                         onChange={(e) => handleSearch(e.target.value)}
                         className="w-full p-2 pl-4 pr-10 bg-primary-card border border-border rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent-green transition-colors"
@@ -90,7 +90,7 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
 
                 {/* Status Filter */}
                 <div className="flex items-center gap-2">
-                    <span className="text-text-muted text-sm whitespace-nowrap">Статус:</span>
+                    <span className="text-text-muted text-sm whitespace-nowrap">Status:</span>
                     <div className="flex items-center bg-primary-card rounded-lg p-1 border border-border">
                         {statusFilters.map((filter) => (
                             <button
@@ -111,7 +111,7 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
 
                 {/* Sort */}
                 <div className="flex items-center gap-2">
-                    <span className="text-text-muted text-sm whitespace-nowrap">Сортировка:</span>
+                    <span className="text-text-muted text-sm whitespace-nowrap">Sorting:</span>
                     <div className="relative">
                         <select
                             value={activeSort}
