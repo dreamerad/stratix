@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react'
 import {Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid, Brush} from 'recharts'
 import {dashboardMiningApi} from '../../api/mining'
 import {useCurrency} from '@/shared/providers/CurrencyProvider'
-import {ZoomIn, ZoomOut, Download, Settings} from 'lucide-react'
+// import {ZoomIn, ZoomOut, Download, Settings} from 'lucide-react'
 
 function CustomTooltip({active, payload}: any) {
     if (active && payload && payload.length) {

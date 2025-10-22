@@ -4,7 +4,7 @@ import {DashboardHeader} from '@/features/dashboard/components/Header/DashboardH
 import {NavigationTabs} from '@/shared/ui/NavigationTabs'
 import {HashrateChart} from '@/features/dashboard/components/Chart/HashrateChart'
 import {WorkerStats} from '@/features/dashboard/components/Stats/WorkerStats'
-import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettings'
+// import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettings'
 import {WorkerFilters} from '@/features/dashboard/components/Workers/WorkerFilters'
 import {WorkersList} from '@/features/workers/components/WorkersList'
 import {useWorkers} from '@/features/workers/hooks/useWorkers'

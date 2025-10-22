@@ -14,11 +14,11 @@ interface WorkerFiltersProps {
 
 export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }: WorkerFiltersProps) {
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeFeeFilter, setActiveFeeFilter] = useState<FeeFilter>('All')
+  // const [activeFeeFilter, setActiveFeeFilter] = useState<FeeFilter>('All')
   const [activeStatusFilter, setActiveStatusFilter] = useState<StatusFilter>('All')
   const [activeSort, setActiveSort] = useState<SortOption>('Bigger hashrate')
 
-  const feeFilters: FeeFilter[] = ['All', 'Custom']
+  // const feeFilters: FeeFilter[] = ['All', 'Custom']
   const statusFilters: StatusFilter[] = ['All', 'Active', 'Unactive']
   const sortOptions: SortOption[] = ['Bigger hashrate', 'Smaller hashrate', 'Name A-Z', 'Name Z-A']
 
@@ -27,10 +27,10 @@ export function WorkerFilters({ onSearch, onFeeFilter, onStatusFilter, onSort }:
     onSearch?.(value)
   }
 
-  const handleFeeFilter = (filter: FeeFilter) => {
-    setActiveFeeFilter(filter)
-    onFeeFilter?.(filter)
-  }
+  // const handleFeeFilter = (filter: FeeFilter) => {
+  //   setActiveFeeFilter(filter)
+  //   onFeeFilter?.(filter)
+  // }
 
   const handleStatusFilter = (filter: StatusFilter) => {
     setActiveStatusFilter(filter)
