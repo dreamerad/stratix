@@ -1,13 +1,13 @@
-import { useState } from 'react'
 import type { Proxy } from '../api/proxies'
 
 interface ProxyCardProps {
   proxy: Proxy
   onStatusUpdate: (proxyId: string, status: 'active' | 'inactive') => void
   onDelete?: (proxyId: string) => void
+    onEdit?: (proxy: Proxy) => void
 }
 
-export function ProxyCard({ proxy, onStatusUpdate, onEdit}: ProxyCardProps) {
+export function ProxyCard({ proxy, onEdit}: ProxyCardProps) {
   // const [isLoading, setIsLoading] = useState(false)
   //
   // const handleStatusToggle = async () => {

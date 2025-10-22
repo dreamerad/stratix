@@ -329,12 +329,6 @@ export function HashrateChart() {
                     <AreaChart
                         data={data}
                         margin={{top: 10, right: 10, left: 10, bottom: showBrush ? 50 : 10}}
-                        onMouseMove={(e) => {
-                            if (e && e.activeTooltipIndex !== undefined) {
-                                setHoveredPoint(e.activeTooltipIndex)
-                            }
-                        }}
-                        onMouseLeave={() => setHoveredPoint(null)}
                     >
                         <defs>
                             {/* Основной градиент заливки */}
