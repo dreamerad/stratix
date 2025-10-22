@@ -50,7 +50,7 @@ export function ProxyCard({proxy, onEdit}: ProxyCardProps) {
 
             {/* Proxy ID */}
             <h3 className="text-text-primary font-semibold text-lg mb-4 group-hover:text-accent-green transition-colors">
-                {proxy.proxy_id}
+                {proxy.proxy_id.split('-')[0]}
             </h3>
 
             {/* Divider */}
