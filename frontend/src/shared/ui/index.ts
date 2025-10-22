@@ -1,4 +1,3 @@
-// Barrel exports for shared UI components
 export { AnimatedModal } from './AnimatedModal'
 export { FormField } from './FormField'
 export { Button } from './Button'
@@ -7,8 +6,11 @@ export { ToastProvider, useToast, useToastHelpers } from './Toast'
 export { Toggle } from './Toggle'
 export { Pagination } from './Pagination'
 export { Footer } from './Footer'
-// Export types if needed
+export { NavigationTabs } from './NavigationTabs'
+export { ConfirmationModal } from './ConfirmationModal'
+
 export type { ButtonProps } from './Button'
 export type { FormFieldProps } from './FormField'
 export type { AnimatedModalProps } from './AnimatedModal'
 export type { Toast, ToastType } from './Toast'
+export type { ConfirmationModalProps } from './ConfirmationModal'

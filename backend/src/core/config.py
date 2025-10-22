@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "your-secret-key-here"
     DOMAIN: str
     ACCESS_TOKEN_EXPIRE: int = 24 * 60 * 60 * 60
-    MINING_STATS_API_BASE_URL: str = "http://31.172.74.29:8501"
+    MINING_STATS_API_BASE_URL: str = "http://103.75.126.32:8501"
     # Database configuration from env
     DB_TYPE: str = "ASYNC_POSTGRESQL"
     DB_NAME: str = "db"

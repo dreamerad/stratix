@@ -2,7 +2,7 @@ import abc
 from typing import List
 
 from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, WorkerDataPoint, WorkerHistoryResponseDTO, \
-    WorkersHistoryAllResponseDTO
+    WorkersHistoryAllResponseDTO, ProxiesResponseDTO, CreateProxyDTO, ProxyCreateResponseDTO
 from src.mining.domain.enum import CurrencyType, TimeType
 
 
@@ -25,4 +25,16 @@ class IMiningApiClient(abc.ABC):
 
     @abc.abstractmethod
     async def get_workers_history_all(self, hours: int, currency: CurrencyType) -> WorkersHistoryAllResponseDTO:
+        pass
+
+    @abc.abstractmethod
+    async def get_proxies_list(self) -> ProxiesResponseDTO:
+        pass
+
+    @abc.abstractmethod
+    async def add_proxy(self, create_proxy_data: CreateProxyDTO) -> ProxyCreateResponseDTO:
+        pass
+
+    @abc.abstractmethod
+    async def update_status_proxy(self, proxy_id: str, status: str) -> str:
         pass

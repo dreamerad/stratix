@@ -14,7 +14,7 @@ def get_mining_client() -> IMiningApiClient:
     http_client = get_http_client()
     api_client = HttpApiClient(
         client=http_client,
-        source_url="http://31.172.74.29:8501"
+        source_url="http://103.75.126.32:8501"
     )
     return HttpMiningApiClient(api_client)
 

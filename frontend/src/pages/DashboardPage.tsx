@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {Navigate} from 'react-router-dom'
 import {DashboardHeader} from '@/features/dashboard/components/Header/DashboardHeader'
+import {NavigationTabs} from '@/shared/ui/NavigationTabs'
 import {HashrateChart} from '@/features/dashboard/components/Chart/HashrateChart'
 import {WorkerStats} from '@/features/dashboard/components/Stats/WorkerStats'
 import {FeeSettings} from '@/features/dashboard/components/FeeSettings/FeeSettings'
@@ -57,6 +58,7 @@ export function DashboardPage() {
     return (
         <div className="min-h-screen bg-primary-bg">
             <DashboardHeader/>
+            <NavigationTabs />
 
             <main className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-6 sm:py-8 md:py-12">
                 {/* График и статистика */}

@@ -4,7 +4,7 @@ from src.core.http.api_client import HttpApiClient
 from src.mining.application.interfaces.mining_client import IMiningApiClient
 from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, \
     WorkerDataPoint, WorkerInfoDataPoint, WorkerHistoryResponseDTO, WorkersHistoryAllResponseDTO, \
-    WorkerHistoryAllDataPoint
+    WorkerHistoryAllDataPoint, ProxiesResponseDTO, ProxyDataPoint, ProxiesStats, CreateProxyDTO, ProxyCreateResponseDTO
 from src.mining.domain.enum import CurrencyType, TimeType
 
 
@@ -57,3 +57,52 @@ class HttpMiningApiClient(IMiningApiClient):
             currency=response.data["currency"],
             workers=workers_data
         )
+
+    async def get_proxies_list(self) -> ProxiesResponseDTO:
+        print("=== CLIENT GET_PROXIES_LIST START ===")
+
+        try:
+            response = await self.api.request("GET", f"/api/proxies")
+            print(f"Raw response: {response}")
+            print(f"Response type: {type(response)}")
+            print(f"Response data: {response.data if hasattr(response, 'data') else 'No data attr'}")
+
+            # Проверь, что response.data существует и содержит нужные ключи
+            if not hasattr(response, 'data') or not response.data:
+                print("ERROR: Response has no data")
+                raise Exception("Empty response from API")
+
+            if 'proxies' not in response.data:
+                print(f"ERROR: No 'proxies' key in response. Keys: {list(response.data.keys())}")
+                raise Exception("Invalid response format")
+
+            proxies_data = [
+                ProxyDataPoint(**proxy) for proxy in response.data["proxies"]
+            ]
+
+            return ProxiesResponseDTO(
+                proxies=proxies_data,
+                stats=ProxiesStats(**response.data["stats"]),
+                total=response.data["total"]
+            )
+        except Exception as e:
+            print(f"ERROR IN CLIENT: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
+
+    async def add_proxy(self, create_proxy_data: CreateProxyDTO) -> ProxyCreateResponseDTO:
+        json_data = create_proxy_data.model_dump(by_alias=True)
+
+        response = await self.api.request("POST", "/api/proxies", json=json_data)
+        return ProxyCreateResponseDTO(
+            success=response.data["success"],
+            id=response.data["id"],
+            proxy_id=response.data["proxy_id"]
+        )
+
+    async def update_status_proxy(self, proxy_id: str, status: str) -> str:
+        json_data = {"status": status}
+        response = await self.api.request("PATCH", f"/api/proxies/{proxy_id}/status", json=json_data)
+
+        return response.data["status"]

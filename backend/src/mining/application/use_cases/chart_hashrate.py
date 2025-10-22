@@ -1,8 +1,7 @@
 from typing import List
 
 from src.mining.application.interfaces.mining_client import IMiningApiClient
-from src.mining.domain.dtos import ChartHashrateResponseDTO, \
-    ChartHashrateQueryDTO, ChartDataPoint
+from src.mining.domain.dtos import ChartHashrateQueryDTO, ChartDataPoint
 
 
 class ChartHashrateUseCase():
