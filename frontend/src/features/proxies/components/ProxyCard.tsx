@@ -1,23 +1,21 @@
 import { useState } from 'react'
-import { clsx } from 'clsx'
 import type { Proxy } from '../api/proxies'
 
 interface ProxyCardProps {
   proxy: Proxy
   onStatusUpdate: (proxyId: string, status: 'active' | 'inactive') => void
-  onEdit?: (proxy: Proxy) => void
   onDelete?: (proxyId: string) => void
 }
 
-export function ProxyCard({ proxy, onStatusUpdate, onEdit, onDelete }: ProxyCardProps) {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleStatusToggle = async () => {
-    setIsLoading(true)
-    const newStatus = proxy.status === 'active' ? 'inactive' : 'active'
-    await onStatusUpdate(proxy.proxy_id, newStatus)
-    setIsLoading(false)
-  }
+export function ProxyCard({ proxy, onStatusUpdate, onEdit}: ProxyCardProps) {
+  // const [isLoading, setIsLoading] = useState(false)
+  //
+  // const handleStatusToggle = async () => {
+  //   setIsLoading(true)
+  //   const newStatus = proxy.status === 'active' ? 'inactive' : 'active'
+  //   await onStatusUpdate(proxy.proxy_id, newStatus)
+  //   setIsLoading(false)
+  // }
 
   const getMainFee = () => {
     const fee = proxy.config['sha256-stratum'].debug.fee[0]

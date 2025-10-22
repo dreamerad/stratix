@@ -69,7 +69,7 @@ export function HashrateChart() {
     const [loading, setLoading] = useState(true)
     const {currency} = useCurrency()
     const [selectedPeriod, setSelectedPeriod] = useState<24 | 168 | 720>(24)
-    const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
+    // const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const [zoomDomain, setZoomDomain] = useState<{ startIndex?: number, endIndex?: number }>({})
     // const [showBrush, setShowBrush] = useState(false)
@@ -143,8 +143,8 @@ export function HashrateChart() {
                             minute: '2-digit'
                         }),
                     hashrate: currency === 'BTC'
-                        ? Math.round(point.rawHashrate / 1e12 * 100) / 100  // Терахеш для BTC
-                        : Math.round(point.rawHashrate / 1e6 * 100) / 100,  // Мегахеш для LTC
+                        ? Math.round(point.rawHashrate / 1e12 * 100) / 100
+                        : Math.round(point.rawHashrate / 1e6 * 100) / 100,
                     raw: point.rawHashrate,
                     currency: currency,
                     index
