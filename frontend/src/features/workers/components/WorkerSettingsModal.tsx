@@ -9,7 +9,7 @@ interface WorkerSettingsModalProps {
 }
 
 export function WorkerSettingsModal({isOpen, onClose, workerName}: WorkerSettingsModalProps) {
-    const [workerNameEdit, setWorkerNameEdit] = useState(workerName)
+    const [workerNameEdit] = useState(workerName)
     const [pool, setPool] = useState('')
     const [worker, setWorker] = useState('')
     const [password, setPassword] = useState('')
@@ -17,14 +17,6 @@ export function WorkerSettingsModal({isOpen, onClose, workerName}: WorkerSetting
     const [routeStatus, setRouteStatus] = useState(false)
 
     const handleSave = () => {
-        console.log('Saving worker settings:', {
-            workerName: workerNameEdit,
-            pool,
-            worker,
-            password,
-            percentage,
-            routeStatus
-        })
         onClose()
     }
 

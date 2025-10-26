@@ -42,7 +42,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
             setFees(feeData)
 
             const accountFees = proxy.config['sha256-stratum'].debug.account_fees || {}
-            const userData = Object.entries(accountFees).map(([data]: [string, any]) => ({
+            const userData = Object.entries(accountFees).map(([, data]: [string, any]) => ({
                 pool: data.pool || '127.0.0.1:3333',
                 worker: data.worker || 'user.worker1',
                 pass: data.pass || 'd=65536',
