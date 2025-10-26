@@ -46,7 +46,7 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
           <div className="relative bg-[#1a1a1a] border border-gray-600 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-white">Назначить маршрут</h2>
+                  <h2 className="text-xl font-bold text-white">Assign a route</h2>
                   <button
                       onClick={onClose}
                       className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
@@ -58,7 +58,7 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
 
               {/* Перенаправление */}
               <div className="mb-4">
-                  <h3 className="text-white font-medium mb-3">Перенаправление</h3>
+                  <h3 className="text-white font-medium mb-3">Redirection</h3>
                   <div className="space-y-3">
                       <input
                           type="text"
@@ -67,7 +67,7 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
                           autoComplete="off"
                           name="pool-address-unique"
                           className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-[#00FF26] transition-colors"
-                          placeholder="Пул"
+                          placeholder="Pool"
                       />
 
                       <input
@@ -77,7 +77,7 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
                           autoComplete="off"
                           name="worker-field-unique"
                           className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-[#00FF26] transition-colors"
-                          placeholder="Воркер"
+                          placeholder="Worker"
                       />
 
                       <input
@@ -88,14 +88,14 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
                           name="password-field-unique"
                           data-form-type="other"
                           className="w-full p-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-[#00FF26] transition-colors"
-                          placeholder="Пароль"
+                          placeholder="Password"
                       />
                   </div>
               </div>
 
               {/* Настройки */}
               <div className="mb-6">
-                  <h3 className="text-white font-medium mb-3">Настройки</h3>
+                  <h3 className="text-white font-medium mb-3">Settings</h3>
                   <div className="space-y-4">
                       <div className="relative">
                           <input
@@ -113,15 +113,15 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
                               autoComplete="off"
                               name="percentage-unique"
                               className="w-full p-2 pr-8 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-[#00FF26] transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                              placeholder="Процент"
+                              placeholder="Percent"
                           />
                           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
                       </div>
 
                       <div className="flex items-center justify-between">
                           <div>
-                              <label className="block text-white font-medium">Статус маршрута</label>
-                              <p className="text-gray-400 text-sm">Включить перенаправление</p>
+                              <label className="block text-white font-medium">Route status</label>
+                              <p className="text-gray-400 text-sm">Enable redirection</p>
                           </div>
                           <Toggle
                               checked={routeStatus}
@@ -134,17 +134,12 @@ export function WorkerSettingsModal({ isOpen, onClose, workerName }: WorkerSetti
               {/* Buttons */}
               <div className="flex gap-3">
                   <button
-                      onClick={handleCancel}
-                      className="flex-1 py-2 px-4 bg-gray-800 border border-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors"
-                  >
-                      Отмена
-                  </button>
-                  <button
                       onClick={handleSave}
-                      className="flex-1 py-2 px-4 bg-[#00FF26] text-black font-medium rounded-lg hover:bg-[#00DD22] transition-colors"
+                      className="flex-1 inline-flex items-center justify-center gap-2 font-semibold rounded-md transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transform hover:-translate-y-0.5 active:translate-y-0 relative overflow-hidden bg-accent-green text-primary-bg hover:bg-accent-green-hover hover:shadow-lg hover:shadow-accent-green/25 focus:ring-accent-green/50 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%] px-4 py-2 text-base"
                   >
-                      Сохранить
+                      <span className="transition-all duration-200">Save</span>
                   </button>
+
               </div>
           </div>
       </div>

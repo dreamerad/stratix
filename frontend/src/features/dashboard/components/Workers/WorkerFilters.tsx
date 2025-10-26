@@ -24,7 +24,7 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
 
     const handleSearch = (value: string) => {
         setSearchQuery(value)
-        onSearch?.(value)  // передаем строку, а не setState
+        onSearch?.(value)
     }
 
     // const handleFeeFilter = (filter: FeeFilter) => {
@@ -34,7 +34,7 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
 
     const handleStatusFilter = (filter: StatusFilter) => {
         setActiveStatusFilter(filter)
-        onStatusFilter?.(filter)  // передаем значение, а не setState
+        onStatusFilter?.(filter)
     }
 
     const handleSort = (sort: SortOption) => {
@@ -136,22 +136,22 @@ export function WorkerFilters({onSearch, onStatusFilter, onSort}: WorkerFiltersP
                 </div>
 
                 {/* Export Button */}
-                <button
-                    className="relative flex items-center gap-2 px-4 py-2 bg-black text-white font-medium rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap overflow-hidden">
-                    {/* Зеленые акценты в углах */}
-                    <div className="absolute top-0 left-0 w-6 h-7 bg-accent-green opacity-30 rounded-full blur"></div>
-                    <div
-                        className="absolute bottom-0 right-0 w-6 h-7 bg-accent-green opacity-30 rounded-full blur"></div>
+                {/*<button*/}
+                {/*    className="relative flex items-center gap-2 px-4 py-2 bg-black text-white font-medium rounded-lg hover:opacity-90 transition-opacity whitespace-nowrap overflow-hidden">*/}
+                {/*    /!* Зеленые акценты в углах *!/*/}
+                {/*    <div className="absolute top-0 left-0 w-6 h-7 bg-accent-green opacity-30 rounded-full blur"></div>*/}
+                {/*    <div*/}
+                {/*        className="absolute bottom-0 right-0 w-6 h-7 bg-accent-green opacity-30 rounded-full blur"></div>*/}
 
-                    {/* Контент кнопки */}
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M10 12.5V2.5M10 12.5L5.83333 8.33333M10 12.5L14.1667 8.33333M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5"
-                            stroke="#00FF26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                {/*    /!* Контент кнопки *!/*/}
+                {/*    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">*/}
+                {/*        <path*/}
+                {/*            d="M10 12.5V2.5M10 12.5L5.83333 8.33333M10 12.5L14.1667 8.33333M17.5 12.5V15.8333C17.5 16.2754 17.3244 16.6993 17.0118 17.0118C16.6993 17.3244 16.2754 17.5 15.8333 17.5H4.16667C3.72464 17.5 3.30072 17.3244 2.98816 17.0118C2.67559 16.6993 2.5 16.2754 2.5 15.8333V12.5"*/}
+                {/*            stroke="#00FF26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>*/}
+                {/*    </svg>*/}
 
-                    <span className="relative z-10">Export</span>
-                </button>
+                {/*    <span className="relative z-10">Export</span>*/}
+                {/*</button>*/}
             </div>
         </div>
     )

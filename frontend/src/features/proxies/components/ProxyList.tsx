@@ -24,6 +24,15 @@ export function ProxyList() {
     // await proxiesApi.updateProxy(editingProxy?.proxy_id, proxyData)
   }
 
+  const sortedProxies = proxies.sort((a, b) => {
+    const aIsVia = a.proxy_id.toLowerCase().includes('via')
+    const bIsVia = b.proxy_id.toLowerCase().includes('via')
+
+    if (aIsVia && !bIsVia) return -1
+    if (!aIsVia && bIsVia) return 1
+    return 0
+  })
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -57,7 +66,7 @@ export function ProxyList() {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {proxies.map((proxy) => (
+        {sortedProxies.map((proxy) => (
           <ProxyCard
             key={proxy.proxy_id}
             proxy={proxy}
