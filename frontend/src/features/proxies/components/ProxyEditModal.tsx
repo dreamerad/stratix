@@ -21,25 +21,15 @@ interface CustomUserFormData {
     percent: number
 }
 
-interface AccountFeeFormData {
-    accountName: string
-    worker: string
-    percent: number
-}
-
 export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalProps) {
     const [proxyId, setProxyId] = useState('')
     const [fees, setFees] = useState<FeeFormData[]>([])
     const [customUsers, setCustomUsers] = useState<CustomUserFormData[]>([])
-    const [accountFees, setAccountFees] = useState<AccountFeeFormData[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         if (isOpen && proxy) {
-            const parts = proxy.proxy_id.split('-')
-            const poolPart = parts.slice(1).join('-')
             setProxyId(proxy.proxy_id)
-            setPoolName(poolPart)
 
             // Обычные fee (возвращаем все поля)
             const feeData = proxy.config['sha256-stratum'].debug.fee.map(fee => ({
@@ -56,25 +46,13 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                 percent: Number(percent)
             }))
             setCustomUsers(customData)
-
-            // Account fees - персональные настройки аккаунтов
-            const accountFeesData = Object.entries(proxy.config['sha256-stratum'].debug.account_fees).flatMap(([accountName, accountFeeList]) =>
-                accountFeeList.map(fee => ({
-                    accountName,
-                    worker: fee.worker,
-                    percent: fee.percent
-                }))
-            )
-            setAccountFees(accountFeesData)
         }
     }, [isOpen, proxy])
 
     const handleClose = () => {
         setProxyId('')
-        setPoolName('')
         setFees([])
         setCustomUsers([])
-        setAccountFees([])
         setIsSubmitting(false)
         onClose()
     }
@@ -117,25 +95,6 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         setCustomUsers(updatedUsers)
     }
 
-    const addAccountFee = () => {
-        setAccountFees([...accountFees, {
-            accountName: '',
-            worker: 'viabtc.fee1',
-            percent: 1
-        }])
-    }
-
-    const removeAccountFee = (index: number) => {
-        setAccountFees(accountFees.filter((_, i) => i !== index))
-    }
-
-    const updateAccountFee = (index: number, field: keyof AccountFeeFormData, value: string | number) => {
-        const updatedAccountFees = accountFees.map((fee, i) =>
-            i === index ? {...fee, [field]: value} : fee
-        )
-        setAccountFees(updatedAccountFees)
-    }
-
     const handleSave = async () => {
         if (!proxyId.trim()) {
             return
@@ -162,31 +121,13 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                 }
             })
 
-            // Группируем account fees по имени аккаунта
-            const accountFeesGrouped: Record<string, any[]> = {}
-            accountFees.forEach(accountFee => {
-                if (accountFee.accountName.trim()) {
-                    if (!accountFeesGrouped[accountFee.accountName]) {
-                        accountFeesGrouped[accountFee.accountName] = []
-                    }
-                    accountFeesGrouped[accountFee.accountName].push({
-                        pool: '127.0.0.1:3333',
-                        worker: accountFee.worker,
-                        pass: 'd=65536',
-                        percent: accountFee.percent,
-                        window_min: 600,
-                        window_max: 900
-                    })
-                }
-            })
-
             const proxyData = {
                 config: {
                     "sha256-stratum": {
                         debug: {
                             fee: transformedFees,
                             custom: customObject,
-                            account_fees: accountFeesGrouped
+                            account_fees: {}
                         }
                     }
                 },
@@ -208,36 +149,9 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
             onClose={handleClose}
             title={`${proxy?.proxy_id || ''}`}
             maxWidth="xl"
-            className="max-h-[95vh] overflow-hidden w-full max-w-4xl flex flex-col"
+            className="max-h-[95vh] overflow-hidden w-full max-w-6xl flex flex-col"
         >
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {/* Proxy ID Section */}
-                {/*<div className="bg-[#222222] rounded-lg p-6 border border-border">*/}
-                {/*    <h2 className="text-text-primary text-lg font-semibold mb-4">Конфигурация прокси</h2>*/}
-                {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">*/}
-                {/*        <div className="space-y-2">*/}
-                {/*            <label className="block text-text-muted text-sm font-medium">ID прокси</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                value={proxyId}*/}
-                {/*                onChange={(e) => setProxyId(e.target.value)}*/}
-                {/*                className="w-full p-3 bg-primary-bg border border-border rounded-lg text-text-primary focus:outline-none focus:border-accent-green transition-colors"*/}
-                {/*                placeholder="proxy-название"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*        <div className="space-y-2">*/}
-                {/*            <label className="block text-text-muted text-sm font-medium">Название пула</label>*/}
-                {/*            <input*/}
-                {/*                type="text"*/}
-                {/*                value={poolName}*/}
-                {/*                onChange={(e) => setPoolName(e.target.value)}*/}
-                {/*                className="w-full p-3 bg-primary-bg border border-border rounded-lg text-text-primary focus:outline-none focus:border-accent-green transition-colors"*/}
-                {/*                placeholder="viabtc"*/}
-                {/*            />*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
                 {/* Fee Settings Section */}
                 <div className="bg-[#222222] rounded-lg p-6 border border-border">
                     <div className="flex items-center justify-between mb-4">
@@ -285,7 +199,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">Воркер </label>
+                                        <label className="block text-text-muted text-sm">Воркер</label>
                                         <input
                                             type="text"
                                             value={fee.worker}
@@ -407,8 +321,6 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                         )}
                     </div>
                 </div>
-
-                {/* Account Fees Section */}
             </div>
 
             {/* Fixed Footer */}
