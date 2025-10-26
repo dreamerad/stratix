@@ -24,7 +24,7 @@ const tabs: Tab[] = [
     },
     {
         id: 'proxies',
-        label: 'Proxies-configs',
+        label: 'Pools',
         path: '/proxies',
         icon: (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@ const tabs: Tab[] = [
     },
     {
         id: 'pool-monitoring',
-        label: 'Pool',
+        label: 'Watcher link',
         path: 'https://www.viabtc.com/observer/dashboard?access_key=818d9e02a383bcfb49c1c2443ed572a1',
         icon: (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
