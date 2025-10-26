@@ -33,7 +33,6 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         if (isOpen && proxy) {
             setProxyId(proxy.proxy_id)
 
-            // Обычные fee (возвращаем все поля)
             const feeData = proxy.config['sha256-stratum'].debug.fee.map(fee => ({
                 pool: fee.pool,
                 worker: fee.worker,
@@ -42,9 +41,8 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
             }))
             setFees(feeData)
 
-            // Настройки пользователей - преобразуем из account_fees если есть
             const accountFees = proxy.config['sha256-stratum'].debug.account_fees || {}
-            const userData = Object.entries(accountFees).map(([key, data]: [string, any]) => ({
+            const userData = Object.entries(accountFees).map(([data]: [string, any]) => ({
                 pool: data.pool || '127.0.0.1:3333',
                 worker: data.worker || 'user.worker1',
                 pass: data.pass || 'd=65536',
