@@ -8,8 +8,7 @@ interface WorkerSettingsModalProps {
     workerName: string
 }
 
-export function WorkerSettingsModal({isOpen, onClose, workerName}: WorkerSettingsModalProps) {
-    const [workerNameEdit] = useState(workerName)
+export function WorkerSettingsModal({isOpen, onClose}: WorkerSettingsModalProps) {
     const [pool, setPool] = useState('')
     const [worker, setWorker] = useState('')
     const [password, setPassword] = useState('')
