@@ -148,10 +148,9 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
             isOpen={isOpen}
             onClose={handleClose}
             title={`${proxy?.proxy_id || ''}`}
-            maxWidth="xl"
-            className="max-h-[95vh] overflow-hidden w-full max-w-6xl flex flex-col"
+            className="!w-[90vw] !max-w-[900px] max-h-[95vh] p-6overflow-hidden flex flex-col"
         >
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="w-[90vw] max-w-[800px] mx-auto max-h-[95vh] overflow-hidden flex flex-col">
                 {/* Fee Settings Section */}
                 <div className="bg-[#222222] rounded-lg p-6 border border-border">
                     <div className="flex items-center justify-between mb-4">
