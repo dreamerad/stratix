@@ -14,8 +14,6 @@ interface FeeFormData {
     worker: string
     pass: string
     percent: number
-    window_min: number
-    window_max: number
 }
 
 interface CustomUserFormData {
@@ -23,38 +21,60 @@ interface CustomUserFormData {
     percent: number
 }
 
+interface AccountFeeFormData {
+    accountName: string
+    worker: string
+    percent: number
+}
+
 export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalProps) {
     const [proxyId, setProxyId] = useState('')
     const [fees, setFees] = useState<FeeFormData[]>([])
     const [customUsers, setCustomUsers] = useState<CustomUserFormData[]>([])
+    const [accountFees, setAccountFees] = useState<AccountFeeFormData[]>([])
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         if (isOpen && proxy) {
+            const parts = proxy.proxy_id.split('-')
+            const poolPart = parts.slice(1).join('-')
             setProxyId(proxy.proxy_id)
+            setPoolName(poolPart)
 
+            // Обычные fee (возвращаем все поля)
             const feeData = proxy.config['sha256-stratum'].debug.fee.map(fee => ({
                 pool: fee.pool,
                 worker: fee.worker,
                 pass: fee.pass,
-                percent: fee.percent,
-                window_min: fee.window_min,
-                window_max: fee.window_max
+                percent: fee.percent
             }))
             setFees(feeData)
 
+            // Custom настройки пользователей
             const customData = Object.entries(proxy.config['sha256-stratum'].debug.custom).map(([userType, percent]) => ({
                 userType,
                 percent: Number(percent)
             }))
             setCustomUsers(customData)
+
+            // Account fees - персональные настройки аккаунтов
+            const accountFeesData = Object.entries(proxy.config['sha256-stratum'].debug.account_fees).flatMap(([accountName, accountFeeList]) =>
+                accountFeeList.map(fee => ({
+                    accountName,
+                    worker: fee.worker,
+                    percent: fee.percent
+                }))
+            )
+            setAccountFees(accountFeesData)
         }
     }, [isOpen, proxy])
 
     const handleClose = () => {
         setProxyId('')
+        setPoolName('')
         setFees([])
         setCustomUsers([])
+        setAccountFees([])
         setIsSubmitting(false)
         onClose()
     }
@@ -62,11 +82,9 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
     const addFee = () => {
         setFees([...fees, {
             pool: '127.0.0.1:3333',
-            worker: 'defaultWorker.fee1',
+            worker: 'viabtc.fee1',
             pass: 'd=65536',
-            percent: 1,
-            window_min: 600,
-            window_max: 900
+            percent: 1
         }])
     }
 
@@ -83,7 +101,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
 
     const addCustomUser = () => {
         setCustomUsers([...customUsers, {
-            userType: 'new_user',
+            userType: '',
             percent: 0
         }])
     }
@@ -99,6 +117,25 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         setCustomUsers(updatedUsers)
     }
 
+    const addAccountFee = () => {
+        setAccountFees([...accountFees, {
+            accountName: '',
+            worker: 'viabtc.fee1',
+            percent: 1
+        }])
+    }
+
+    const removeAccountFee = (index: number) => {
+        setAccountFees(accountFees.filter((_, i) => i !== index))
+    }
+
+    const updateAccountFee = (index: number, field: keyof AccountFeeFormData, value: string | number) => {
+        const updatedAccountFees = accountFees.map((fee, i) =>
+            i === index ? {...fee, [field]: value} : fee
+        )
+        setAccountFees(updatedAccountFees)
+    }
+
     const handleSave = async () => {
         if (!proxyId.trim()) {
             return
@@ -107,6 +144,17 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         setIsSubmitting(true)
 
         try {
+            // Преобразуем обратно в оригинальный формат
+            const transformedFees = fees.map(fee => ({
+                pool: fee.pool,
+                worker: fee.worker,
+                pass: fee.pass,
+                percent: fee.percent,
+                window_min: 600,
+                window_max: 900
+            }))
+
+            // Custom настройки пользователей
             const customObject: Record<string, number> = {}
             customUsers.forEach(user => {
                 if (user.userType.trim()) {
@@ -114,13 +162,31 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                 }
             })
 
+            // Группируем account fees по имени аккаунта
+            const accountFeesGrouped: Record<string, any[]> = {}
+            accountFees.forEach(accountFee => {
+                if (accountFee.accountName.trim()) {
+                    if (!accountFeesGrouped[accountFee.accountName]) {
+                        accountFeesGrouped[accountFee.accountName] = []
+                    }
+                    accountFeesGrouped[accountFee.accountName].push({
+                        pool: '127.0.0.1:3333',
+                        worker: accountFee.worker,
+                        pass: 'd=65536',
+                        percent: accountFee.percent,
+                        window_min: 600,
+                        window_max: 900
+                    })
+                }
+            })
+
             const proxyData = {
                 config: {
                     "sha256-stratum": {
                         debug: {
-                            fee: fees,
+                            fee: transformedFees,
                             custom: customObject,
-                            account_fees: {}
+                            account_fees: accountFeesGrouped
                         }
                     }
                 },
@@ -140,16 +206,41 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
         <AnimatedModal
             isOpen={isOpen}
             onClose={handleClose}
-            title={proxyId}
-            maxWidth="lg"
+            title={`${proxy?.proxy_id || ''}`}
+            maxWidth="xl"
             className="max-h-[95vh] overflow-hidden w-full max-w-4xl flex flex-col"
         >
-            <div className="flex-1 overflow-y-auto p-8 space-y-6">
-
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {/* Proxy ID Section */}
+                {/*<div className="bg-[#222222] rounded-lg p-6 border border-border">*/}
+                {/*    <h2 className="text-text-primary text-lg font-semibold mb-4">Конфигурация прокси</h2>*/}
+                {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">*/}
+                {/*        <div className="space-y-2">*/}
+                {/*            <label className="block text-text-muted text-sm font-medium">ID прокси</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                value={proxyId}*/}
+                {/*                onChange={(e) => setProxyId(e.target.value)}*/}
+                {/*                className="w-full p-3 bg-primary-bg border border-border rounded-lg text-text-primary focus:outline-none focus:border-accent-green transition-colors"*/}
+                {/*                placeholder="proxy-название"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*        <div className="space-y-2">*/}
+                {/*            <label className="block text-text-muted text-sm font-medium">Название пула</label>*/}
+                {/*            <input*/}
+                {/*                type="text"*/}
+                {/*                value={poolName}*/}
+                {/*                onChange={(e) => setPoolName(e.target.value)}*/}
+                {/*                className="w-full p-3 bg-primary-bg border border-border rounded-lg text-text-primary focus:outline-none focus:border-accent-green transition-colors"*/}
+                {/*                placeholder="viabtc"*/}
+                {/*            />*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Fee Settings Section */}
                 <div className="bg-[#222222] rounded-lg p-6 border border-border">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-4">
                         <h2 className="text-text-primary text-lg font-semibold">Fee настройки</h2>
                         <Button
                             variant="secondary"
@@ -162,7 +253,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                                 </svg>
                             }
                         >
-                            Add Fee
+                            Добавить Fee
                         </Button>
                     </div>
 
@@ -184,7 +275,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">Pool</label>
+                                        <label className="block text-text-muted text-sm">Пул</label>
                                         <input
                                             type="text"
                                             value={fee.pool}
@@ -194,27 +285,27 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">Worker</label>
+                                        <label className="block text-text-muted text-sm">Воркер </label>
                                         <input
                                             type="text"
                                             value={fee.worker}
                                             onChange={(e) => updateFee(index, 'worker', e.target.value)}
                                             className="w-full p-3 bg-primary-card border border-border rounded text-text-primary text-sm focus:outline-none focus:border-accent-green transition-colors"
-                                            placeholder="defaultWorker.fee1"
+                                            placeholder="viabtc.fee1"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">Password</label>
+                                        <label className="block text-text-muted text-sm">Пароль</label>
                                         <input
                                             type="text"
-                                            value={fee.pass}
-                                            onChange={(e) => updateFee(index, 'pass', e.target.value)}
-                                            className="w-full p-3 bg-primary-card border border-border rounded text-text-primary text-sm focus:outline-none focus:border-accent-green transition-colors"
-                                            placeholder="d=65536"
+                                            value="••••••••••"
+                                            disabled
+                                            className="w-full p-3 bg-gray-700/50 border border-border rounded text-text-muted text-sm cursor-not-allowed"
+                                            placeholder="••••••••••"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">%</label>
+                                        <label className="block text-text-muted text-sm">Процент</label>
                                         <div className="relative">
                                             <input
                                                 type="number"
@@ -235,17 +326,17 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
 
                         {fees.length === 0 && (
                             <div className="text-center py-6 text-text-muted">
-                                <p className="mb-2">No fee settings configured</p>
-                                <Button variant="secondary" onClick={addFee}>Add your first fee setting</Button>
+                                <p className="mb-2">Нет настроек fee</p>
+                                <Button variant="secondary" onClick={addFee}>Добавить первую настройку fee</Button>
                             </div>
                         )}
                     </div>
                 </div>
 
-                {/* User Types Section */}
+                {/* Custom настройки пользователей */}
                 <div className="bg-[#222222] rounded-lg p-6 border border-border">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-text-primary text-lg font-semibold">Custom настройки пользователей</h2>
+                        <h2 className="text-text-primary text-lg font-semibold">Настройки пользователей</h2>
                         <Button
                             variant="secondary"
                             size="sm"
@@ -257,7 +348,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                                 </svg>
                             }
                         >
-                            Add User Type
+                            Добавить тип
                         </Button>
                     </div>
 
@@ -265,7 +356,7 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                         {customUsers.map((user, index) => (
                             <div key={index} className="bg-primary-bg border border-border rounded-lg p-4">
                                 <div className="flex items-center justify-between mb-4">
-                                    <h4 className="text-text-primary font-medium">User Type #{index + 1}</h4>
+                                    <h4 className="text-text-primary font-medium">Тип пользователя #{index + 1}</h4>
                                     <button
                                         onClick={() => removeCustomUser(index)}
                                         className="w-7 h-7 bg-red-500/10 hover:bg-red-500/20 rounded flex items-center justify-center text-red-500 hover:text-red-400 transition-colors"
@@ -285,11 +376,11 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
                                             value={user.userType}
                                             onChange={(e) => updateCustomUser(index, 'userType', e.target.value)}
                                             className="w-full p-3 bg-primary-card border border-border rounded text-text-primary focus:outline-none focus:border-accent-green transition-colors"
-                                            placeholder="e.g. premium_user, trial_user"
+                                            placeholder="premium_user, trial_user, free_account"
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="block text-text-muted text-sm">%</label>
+                                        <label className="block text-text-muted text-sm">Процент</label>
                                         <div className="relative">
                                             <input
                                                 type="number"
@@ -310,12 +401,14 @@ export function ProxyEditModal({isOpen, onClose, proxy, onSave}: ProxyEditModalP
 
                         {customUsers.length === 0 && (
                             <div className="text-center py-6 text-text-muted">
-                                <p className="mb-2">No custom user types configured</p>
-                                <Button variant="secondary" onClick={addCustomUser}>Add your first user type</Button>
+                                <p className="mb-2">Нет настроек для типов пользователей</p>
+                                <Button variant="secondary" onClick={addCustomUser}>Добавить первый тип</Button>
                             </div>
                         )}
                     </div>
                 </div>
+
+                {/* Account Fees Section */}
             </div>
 
             {/* Fixed Footer */}
