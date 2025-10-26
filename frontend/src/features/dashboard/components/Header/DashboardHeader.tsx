@@ -75,8 +75,16 @@ export function DashboardHeader() {
                         </svg>
                     </div>
 
-                    {/* Правая часть - Кнопки монет + профиль */}
-                    <div className="flex items-center gap-6 ">
+                    {/* Правая часть - Support текст + Кнопки монет + профиль */}
+                    <div className="flex items-center gap-6">
+                        {/* Support Text */}
+                        <div className="text-text-muted text-sm">
+                            If you need any help,{' '}
+                            <button className="text-[#00FF26] hover:text-accent-green-hover transition-colors">
+                                contact support
+                            </button>
+                        </div>
+
                         {/* Переключатель монет */}
                         <div className="flex items-center rounded-lg p-2 w-[101px] h-[40px] bg-[#222222]">
                             {coins.map((coin) => (
