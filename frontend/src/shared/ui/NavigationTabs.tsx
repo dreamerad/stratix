@@ -76,7 +76,7 @@ export function NavigationTabs() {
     {/* Контейнер с адаптивными отступами и горизонтальным скроллом */}
     <div className="px-3 sm:px-4 md:px-8 lg:px-16 xl:px-32 overflow-x-auto scrollbar-hide">
       <div className="flex items-center min-w-max">
-        {tabs.map((tab, index) => {
+        {tabs.map((tab) => {
           const isActive = activeTab?.id === tab.id
           const isExternalLink = tab.path.startsWith('http')
 
