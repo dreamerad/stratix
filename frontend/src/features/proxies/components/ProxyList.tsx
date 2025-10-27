@@ -19,11 +19,6 @@ export function ProxyList() {
     setEditingProxy(null)
   }
 
-  const handleSaveProxy = async (proxyData: any) => {
-    console.log('Saving proxy:', proxyData)
-    // await proxiesApi.updateProxy(editingProxy?.proxy_id, proxyData)
-  }
-
   const sortedProxies = proxies.sort((a, b) => {
     const aIsVia = a.proxy_id.toLowerCase().includes('via')
     const bIsVia = b.proxy_id.toLowerCase().includes('via')
