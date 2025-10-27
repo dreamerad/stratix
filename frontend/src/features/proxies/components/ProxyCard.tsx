@@ -8,23 +8,9 @@ interface ProxyCardProps {
 }
 
 export function ProxyCard({proxy, onEdit}: ProxyCardProps) {
-    // const [isLoading, setIsLoading] = useState(false)
-    //
-    // const handleStatusToggle = async () => {
-    //   setIsLoading(true)
-    //   const newStatus = proxy.status === 'active' ? 'inactive' : 'active'
-    //   await onStatusUpdate(proxy.proxy_id, newStatus)
-    //   setIsLoading(false)
-    // }
-
     const getMainFee = () => {
         const fee = proxy.config['sha256-stratum'].debug.fee[0]
         return fee ? `${fee.percent}%` : '0%'
-    }
-
-    const getAccountFeesCount = () => {
-        const accountFees = proxy.config['sha256-stratum'].debug.account_fees
-        return Object.keys(accountFees).length
     }
 
     const isViaPool = proxy.proxy_id.toLowerCase().includes('via')
@@ -34,22 +20,18 @@ export function ProxyCard({proxy, onEdit}: ProxyCardProps) {
             className={`bg-[#222222] border rounded-xl p-4 transition-all duration-300 group ${
                 isViaPool 
                     ? 'border-[#00FF26]/50 hover:border-[#00FF26] shadow-[0_0_10px_rgba(0,255,38,0.1)]' 
-                    : 'border-border hover:border-accent-green/30'
+                    : 'border-red-500/50 hover:border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.1)]'
             }`}>
             {/* Header с фи */}
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
-                    <span className="text-xs px-3 py-1 rounded-md font-medium text-[#00FF26] bg-[#00FF26]/10">
+                    <span className={`text-xs px-3 py-1 rounded-md font-medium ${
+                        isViaPool 
+                            ? 'text-[#00FF26] bg-[#00FF26]/10'
+                            : 'text-red-400 bg-red-500/10'
+                    }`}>
                         {getMainFee()}
                     </span>
-
-                    {getAccountFeesCount() > 0 && (
-                        <div className="flex items-center gap-1 bg-[#FFFFFF12] rounded-md px-2 py-1">
-                            <span className="text-xs font-medium text-purple-400">
-                                {getAccountFeesCount()} custom fees
-                            </span>
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -67,8 +49,10 @@ export function ProxyCard({proxy, onEdit}: ProxyCardProps) {
                         <path fill="#ffb900" d="M169.08,112.72c-4.23,17.16-30.62,8.45-39.33,6.34L137.4,89c8.45,1.84,35.9,6.07,31.68,23.75Zm-4.76,48.83c-4.75,19-36.42,8.71-46.71,6.07l8.44-33.26c10,2.64,43,7.66,38.27,27.19Zm4.23-83.41,6.07-24.81-15.05-4L153.5,73.66c-4-1.06-7.92-1.85-12.14-2.91l6.07-24.28-15-3.69-6.34,24.81c-3.17-.8-6.6-1.59-9.76-2.12L95.43,60.2l-4,16.1,11.08,2.64c6.07,1.58,7.13,5.54,7.13,8.71l-7.13,28.24c.53.26,1.06.26,1.58.53-.52-.27-1-.27-1.58-.53l-9.77,39.85c-.79,1.85-2.63,4.76-6.86,3.7.27.26-11.08-2.64-11.08-2.64l-7.66,17.42L86.72,179c3.7,1.06,7.13,1.85,10.83,2.91L91.21,207l15.05,3.7,6.33-24.82c4,1.06,8.18,2.12,12.14,3.17l-6.33,24.55,15,3.69,6.34-25.07c25.86,4.75,45.13,2.9,53.31-20.32,6.6-18.74-.26-29.83-14-36.69,10.29-2.11,17.68-8.71,19.79-22.17C201.54,94.51,187.55,84.74,168.55,78.14Z"/>
                     </svg>
                 )}
-                <h3 className={`font-semibold text-lg group-hover:text-accent-green transition-colors ${
-                    isViaPool ? 'text-[#00FF26]' : 'text-text-primary'
+                <h3 className={`font-semibold text-lg group-hover:transition-colors ${
+                    isViaPool 
+                        ? 'text-[#00FF26] group-hover:text-accent-green' 
+                        : 'text-text-primary group-hover:text-red-400'
                 }`}>
                     {proxy.proxy_id.split('-')[0]}
                 </h3>
@@ -83,7 +67,11 @@ export function ProxyCard({proxy, onEdit}: ProxyCardProps) {
                     {/* Edit Button */}
                     <button
                         onClick={() => onEdit?.(proxy)}
-                        className="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:border-accent-green hover:bg-accent-green/10 transition-colors"
+                        className={`w-8 h-8 rounded-full border flex items-center justify-center transition-colors ${
+                            isViaPool
+                                ? 'border-border hover:border-accent-green hover:bg-accent-green/10'
+                                : 'border-border hover:border-red-500 hover:bg-red-500/10'
+                        }`}
                         title="Edit proxy"
                     >
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none">

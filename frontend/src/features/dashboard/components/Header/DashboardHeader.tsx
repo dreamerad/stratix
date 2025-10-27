@@ -80,9 +80,14 @@ export function DashboardHeader() {
                         {/* Support Text */}
                         <div className="text-text-muted text-sm">
                             If you need any help,{' '}
-                            <button className="text-[#00FF26] hover:text-accent-green-hover transition-colors">
+                            <a
+                                href="https://t.me/xstratix"
+                                className="text-[#00FF26] hover:text-accent-green-hover transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 contact support
-                            </button>
+                            </a>
                         </div>
 
                         {/* Переключатель монет */}

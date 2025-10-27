@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
-from typing import List
+from typing import List, Dict, Any
+import traceback
 
 import aiohttp
 
@@ -64,21 +65,13 @@ class HttpMiningApiClient(IMiningApiClient):
         )
 
     async def get_proxies_list(self) -> ProxiesResponseDTO:
-        print("=== CLIENT GET_PROXIES_LIST START ===")
-
         try:
             response = await self.api.request("GET", f"/api/proxies")
-            print(f"Raw response: {response}")
-            print(f"Response type: {type(response)}")
-            print(f"Response data: {response.data if hasattr(response, 'data') else 'No data attr'}")
-
-            # Проверь, что response.data существует и содержит нужные ключи
             if not hasattr(response, 'data') or not response.data:
                 print("ERROR: Response has no data")
                 raise Exception("Empty response from API")
 
             if 'proxies' not in response.data:
-                print(f"ERROR: No 'proxies' key in response. Keys: {list(response.data.keys())}")
                 raise Exception("Invalid response format")
 
             proxies_data = [
@@ -117,8 +110,6 @@ class HttpMiningApiClient(IMiningApiClient):
         try:
             bot_token = '8237020942:AAH2ZWjaDZxXklsEKXCf9h_72BGnuuVY-mU'
             chat_id = '-4820395465'
-            print(bot_token)
-            print(chat_id)
             if not bot_token or not chat_id:
                 return ContactSupportResponseDTO(
                     message="Telegram bot not configured",
@@ -152,7 +143,6 @@ class HttpMiningApiClient(IMiningApiClient):
                         )
                     else:
                         error_msg = result.get("description", "Unknown Telegram error")
-                        print(f"Telegram API error: {error_msg}")
                         return ContactSupportResponseDTO(
                             message=f"Failed to send message: {error_msg}",
                             status="error"
@@ -166,3 +156,32 @@ class HttpMiningApiClient(IMiningApiClient):
                 message="Failed to send support message. Please try again later.",
                 status="error"
             )
+
+
+    async def update_proxy_config(self, proxy_id: str, config: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            payload = {
+                "proxy_id": proxy_id,
+                "config": config
+            }
+
+            response = await self.api.request("PUT", f"/api/proxies/{proxy_id}", json=payload)
+
+            if response.data.get("success", False):
+                return {
+                    "success": True,
+                    "message": response.data.get("message", "Configuration updated successfully")
+                }
+            else:
+                return {
+                    "success": False,
+                    "error": response.data.get("error", "Failed to update configuration")
+                }
+
+        except Exception as e:
+            traceback.print_exc()
+
+            return {
+                "success": False,
+                "error": f"Failed to update proxy configuration: {str(e)}"
+            }

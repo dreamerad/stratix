@@ -61,6 +61,17 @@ export interface ContactSupportResponse {
     status: 'success' | 'error'
 }
 
+export interface UpdateProxyRequest {
+    config: ProxyConfig
+    proxy_id: string
+}
+
+export interface UpdateProxyResponse {
+    success: boolean
+    proxy_id: string
+    message: string
+}
+
 export const proxiesApi = {
     getProxies: async (): Promise<ProxyResponse> => {
         const response = await apiClient.get('/mining/proxies')
@@ -72,10 +83,16 @@ export const proxiesApi = {
         return response.status === 200
     },
 
+    updateProxy: async (data: UpdateProxyRequest): Promise<UpdateProxyResponse> => {
+        const response = await apiClient.put(`/mining/proxies/${data.proxy_id}`, data)
+        return response.data
+    },
+
     deleteProxy: async (proxyId: string): Promise<{ success: boolean; proxy_id: string }> => {
         const response = await apiClient.delete(`/mining/proxies/${proxyId}`)
         return response.data
     },
+
     sendSupportMessage: async (data: ContactSupportRequest): Promise<ContactSupportResponse> => {
         const response = await apiClient.post('/mining/contact', data)
         return response.data

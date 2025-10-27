@@ -99,9 +99,8 @@ export function ContactModal({isOpen, onClose}: ContactModalProps) {
                             Message <span className="text-red-400">*</span>
                         </label>
                         <textarea
-                            value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            placeholder="Hello! I would like to request a new mining pool..."
+                            value="Hello! I would like to request a new mining pool..."
                             rows={6}
                             className="w-full p-4 bg-primary-card border border-border rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-green transition-colors resize-none leading-relaxed"
                         />

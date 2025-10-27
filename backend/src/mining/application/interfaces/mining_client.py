@@ -1,5 +1,5 @@
 import abc
-from typing import List
+from typing import List, Any, Dict
 
 from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, WorkerDataPoint, WorkerHistoryResponseDTO, \
     WorkersHistoryAllResponseDTO, ProxiesResponseDTO, CreateProxyDTO, ProxyCreateResponseDTO, ContactSupportDTO, \
@@ -42,4 +42,8 @@ class IMiningApiClient(abc.ABC):
 
     @abc.abstractmethod
     async def send_support_message(self, contact_data: ContactSupportDTO) -> ContactSupportResponseDTO:
+        pass
+
+    @abc.abstractmethod
+    async def update_proxy_config(self, proxy_id: str, config: Dict[str, Any]) -> Dict[str, Any]:
         pass

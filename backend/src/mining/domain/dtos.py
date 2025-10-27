@@ -155,3 +155,33 @@ class ContactSupportDTO(BaseModel):
 class ContactSupportResponseDTO(BaseModel):
     message: str = Field(..., description="Response message")
     status: Literal["success", "error"] = Field(..., description="Response status")
+
+class ProxyFeeUpdateDTO(BaseModel):
+    worker: str = Field(..., description="Worker name for fee")
+    percent: float = Field(..., ge=0, le=100, description="Fee percentage")
+
+class ProxyCustomConfigDTO(BaseModel):
+    premium_user: Optional[float] = Field(0.5, description="Premium user percentage")
+    standard_user: Optional[float] = Field(2.0, description="Standard user percentage")
+    trial_user: Optional[float] = Field(3.0, description="Trial user percentage")
+    free_account: float = Field(0.0, description="Free account percentage")
+
+class ProxyDebugConfigDTO(BaseModel):
+    fee: List[ProxyFeeUpdateDTO] = Field(..., description="List of fee configurations")
+    custom: ProxyCustomConfigDTO = Field(..., description="Custom configurations")
+    account_fees: Dict[str, List[ProxyFeeUpdateDTO]] = Field(..., description="Account-specific fees")
+
+class ProxyStratumConfigDTO(BaseModel):
+    debug: ProxyDebugConfigDTO
+
+class ProxyConfigDTO(BaseModel):
+    sha256_stratum: ProxyStratumConfigDTO = Field(..., alias="sha256-stratum")
+
+class UpdateProxyRequestDTO(BaseModel):
+    proxy_id: str = Field(..., description="Proxy identifier")
+    config: ProxyConfigDTO = Field(..., description="Proxy configuration")
+
+class UpdateProxyResponseDTO(BaseModel):
+    success: bool = Field(..., description="Whether update was successful")
+    proxy_id: str = Field(..., description="Updated proxy identifier")
+    message: str = Field(..., description="Response message")

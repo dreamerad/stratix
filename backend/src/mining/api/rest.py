@@ -8,15 +8,16 @@ from src.mining.application.use_cases.contact_support import ContactSupportUseCa
 from src.mining.application.use_cases.create_proxy import AddProxyUseCase
 from src.mining.application.use_cases.proxies_list import ProxiesListUseCase
 from src.mining.application.use_cases.stats_hashrate import StatsHashrateUseCase
+from src.mining.application.use_cases.update_proxy import UpdateProxyUseCase
 from src.mining.application.use_cases.update_status_proxy import UpdateProxyStatusUseCase
 from src.mining.application.use_cases.worker_history import WorkerHistoryUseCase
 from src.mining.application.use_cases.workers_history_all import WorkersHistoryAllUseCase
 from src.mining.application.use_cases.workers_list import WorkersListUseCase
 from src.mining.domain.dtos import StatsHashrateResponseDTO, StatsHashrateQueryDTO, ChartHashrateQueryDTO, \
     ChartDataPoint, WorkersResponseDTO, WorkerHistoryResponseDTO, WorkersHistoryAllResponseDTO, ProxiesResponseDTO, \
-    CreateProxyDTO, ContactSupportDTO, ContactSupportResponseDTO
+    CreateProxyDTO, ContactSupportDTO, ContactSupportResponseDTO, UpdateProxyRequestDTO, UpdateProxyResponseDTO
 from src.mining.domain.enum import CurrencyType
-
+from fastapi import APIRouter, status, Depends, HTTPException
 router = APIRouter()
 
 
@@ -104,3 +105,29 @@ async def contact_support(
         token_data: AuthTokenDepend,
 ):
     return await ContactSupportUseCase(client).execute(dto)
+
+
+@router.put("/proxies/{proxy_id}", status_code=200, response_model=UpdateProxyResponseDTO)
+async def update_proxy(
+        proxy_id: str,
+        request: UpdateProxyRequestDTO,
+        mining_client: MiningClientDepend,
+        token_data: AuthTokenDepend,
+):
+
+    if request.proxy_id != proxy_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Proxy ID in URL must match proxy_id in request body"
+        )
+
+    use_case = UpdateProxyUseCase(mining_client)
+    result = await use_case.execute(request)
+
+    if not result.success:
+        raise HTTPException(
+            status_code=400,
+            detail=result.message
+        )
+
+    return result
