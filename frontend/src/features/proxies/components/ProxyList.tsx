@@ -81,7 +81,6 @@ export function ProxyList() {
         isOpen={isEditModalOpen}
         onClose={handleEditModalClose}
         proxy={editingProxy}
-        onSave={handleSaveProxy}
       />
     </>
   )

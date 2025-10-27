@@ -61,15 +61,29 @@ export interface ContactSupportResponse {
     status: 'success' | 'error'
 }
 
-export interface UpdateProxyRequest {
-    config: ProxyConfig
-    proxy_id: string
-}
 
 export interface UpdateProxyResponse {
     success: boolean
     proxy_id: string
     message: string
+}
+
+export interface ProxyFeeRequest {
+    worker: string
+    percent: number
+}
+
+export interface UpdateProxyRequestDTO {
+    proxy_id: string
+    config: {
+        "sha256-stratum": {
+            debug: {
+                fee: ProxyFeeRequest[]
+                custom: ProxyCustomConfig
+                account_fees: Record<string, ProxyFeeRequest[]>
+            }
+        }
+    }
 }
 
 export const proxiesApi = {
@@ -83,7 +97,7 @@ export const proxiesApi = {
         return response.status === 200
     },
 
-    updateProxy: async (data: UpdateProxyRequest): Promise<UpdateProxyResponse> => {
+    updateProxy: async (data: UpdateProxyRequestDTO): Promise<UpdateProxyResponse> => {
         const response = await apiClient.put(`/mining/proxies/${data.proxy_id}`, data)
         return response.data
     },
