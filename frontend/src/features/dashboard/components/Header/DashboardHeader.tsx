@@ -34,7 +34,7 @@ export function DashboardHeader() {
 
     return (
         <>
-            <header className="bg-[#191919] border-b border-border px-6 h-[50px]">
+            <header className="bg-[#191919] border-b border-border px-6 h-[50px] max-md:px-4 max-sm:px-2">
                 <div className="flex items-center justify-between h-full">
                     {/* Левая часть - Логотип */}
                     <div className="flex items-center">
@@ -72,13 +72,16 @@ export function DashboardHeader() {
                             <path
                                 d="M143.519 20.5455C142.744 20.5455 142.098 20.3624 141.581 19.9963C141.075 19.6193 140.741 19.097 140.579 18.4293L140.805 18.397V23.7117H139.125V12.1615H140.725V14.0516L140.563 14.0031C140.735 13.3785 141.102 12.8885 141.662 12.5331C142.222 12.1777 142.878 12 143.632 12C144.375 12 145.016 12.1777 145.555 12.5331C146.104 12.8885 146.524 13.3839 146.815 14.0193C147.116 14.6546 147.267 15.3977 147.267 16.2485C147.267 17.1101 147.111 17.8639 146.799 18.5101C146.486 19.1562 146.05 19.657 145.49 20.0124C144.93 20.3678 144.273 20.5455 143.519 20.5455ZM143.164 19.1562C143.896 19.1562 144.478 18.8978 144.909 18.3808C145.339 17.8639 145.555 17.1531 145.555 16.2485C145.555 15.3547 145.339 14.66 144.909 14.1646C144.478 13.6585 143.891 13.4054 143.148 13.4054C142.415 13.4054 141.828 13.6639 141.387 14.1808C140.956 14.687 140.741 15.3924 140.741 16.297C140.741 17.1801 140.956 17.8801 141.387 18.397C141.828 18.9032 142.421 19.1562 143.164 19.1562Z"
                                 fill="#00FF26"/>
+                            <text x="120" y="8" fill="#ffffff" font-family="Arial, sans-serif" font-size="10"
+                                  font-weight="300">alpha
+                            </text>
                         </svg>
                     </div>
 
                     {/* Правая часть - Support текст + Кнопки монет + профиль */}
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-6 max-md:gap-3">
                         {/* Support Text */}
-                        <div className="text-text-muted text-sm">
+                        <div className="hidden sm:block text-text-muted text-sm">
                             If you need any help,{' '}
                             <a
                                 href="https://t.me/xstratix"
@@ -90,14 +93,40 @@ export function DashboardHeader() {
                             </a>
                         </div>
 
+                        {/* Support Icon for mobile */}
+                        <div className="sm:hidden">
+                            <a
+                                href="https://t.me/xstratix"
+                                className="text-[#00FF26] hover:text-accent-green-hover transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 20.25c4.97 0 9-3.806 9-8.5S16.97 3.25 12 3.25 3 7.056 3 11.75c0 1.762.635 3.393 1.688 4.7L3 21l5.15-1.8A9.43 9.43 0 0 0 12 20.25Z"
+                                    />
+                                </svg>
+                            </a>
+                        </div>
+
                         {/* Переключатель монет */}
-                        <div className="flex items-center rounded-lg p-2 w-[101px] h-[40px] bg-[#222222]">
+                        <div
+                            className="flex items-center rounded-lg p-2 w-[101px] h-[40px] bg-[#222222] max-sm:w-[80px] max-sm:p-1">
                             {coins.map((coin) => (
                                 <button
                                     key={coin}
                                     onClick={() => setCurrency(coin)}
                                     className={clsx(
-                                        'text-sm font-medium rounded-md transition-all duration-200 w-[46px] h-[32px] flex items-center justify-center',
+                                        'text-sm font-medium rounded-md transition-all duration-200 flex-1 h-[32px] flex items-center justify-center',
                                         currency === coin
                                             ? 'text-[#00FF26] bg-[radial-gradient(circle_at_center,rgba(0,255,38,0.1)_100%,transparent_100%)] shadow-[inset_0_0_10px_rgba(0,255,38,0.5)]'
                                             : 'text-text-secondary hover:text-text-primary'
@@ -146,9 +175,9 @@ export function DashboardHeader() {
                                 </svg>
 
                                 {/* Ник пользователя */}
-                                <span className="text-text-primary font-medium">
-                                    {userData?.name || 'User'}
-                                </span>
+                                <span className="text-text-primary font-medium max-sm:text-sm truncate">
+    {userData?.name || 'User'}
+</span>
 
                                 {/* Стрелка вниз */}
                                 <svg
@@ -255,7 +284,7 @@ export function DashboardHeader() {
                 )}
             </header>
 
-            {/* Модальные окна */}
+                {/* Модальные окна */}
             <ChangeUsernameModal
                 isOpen={isUsernameModalOpen}
                 onClose={() => setIsUsernameModalOpen(false)}

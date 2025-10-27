@@ -72,67 +72,69 @@ export function NavigationTabs() {
     const activeTab = tabs.find(tab => tab.path === location.pathname)
 
     return (
-        <div className="bg-[#191919] border-b border-border">
-            <div className="px-4 sm:px-3 md:px-8 lg:px-16 xl:px-32">
-                <div className="flex items-center">
-                    {tabs.map((tab, index) => {
-                        const isActive = activeTab?.id === tab.id
-                        const isExternalLink = tab.path.startsWith('http')
-                        const marginClass = index === 0 ? '' : index === 2 ? 'ml-4' : 'ml-8'
+  <div className="bg-[#191919] border-b border-border">
+    {/* Контейнер с адаптивными отступами и горизонтальным скроллом */}
+    <div className="px-3 sm:px-4 md:px-8 lg:px-16 xl:px-32 overflow-x-auto scrollbar-hide">
+      <div className="flex items-center min-w-max">
+        {tabs.map((tab, index) => {
+          const isActive = activeTab?.id === tab.id
+          const isExternalLink = tab.path.startsWith('http')
 
-                        if (isExternalLink) {
-                            return (
-                                <a
-                                    key={tab.id}
-                                    href={tab.path}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={clsx(
-                                        'relative flex items-center gap-3 px-1 py-4 text-sm font-medium transition-all duration-200',
-                                        'border-b-2 whitespace-nowrap',
-                                        'text-text-muted border-transparent hover:text-text-primary',
-                                        marginClass
-                                    )}
-                                >
-                            <span
-                                className="transition-colors duration-200 text-text-muted">                    {tab.icon}
-                  </span>
-                                    <span>{tab.label}</span>
-                                </a>
-                            )
-                        }
+          return isExternalLink ? (
+            <a
+              key={tab.id}
+              href={tab.path}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={clsx(
+                'relative flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-3 text-sm sm:text-base font-medium transition-all duration-200',
+                'border-b-2 border-transparent whitespace-nowrap',
+                isActive
+                  ? 'text-[#00FF26] border-[#00FF26]'
+                  : 'text-text-muted hover:text-text-primary hover:border-text-muted'
+              )}
+            >
+              <span
+                className={clsx(
+                  'transition-colors duration-200 flex-shrink-0',
+                  isActive ? 'text-[#00FF26]' : 'text-text-muted'
+                )}
+              >
+                {tab.icon}
+              </span>
+              <span>{tab.label}</span>
+            </a>
+          ) : (
+            <button
+              key={tab.id}
+              onClick={() => navigate(tab.path)}
+              className={clsx(
+                'relative flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-3 text-sm sm:text-base font-medium transition-all duration-200',
+                'border-b-2 border-transparent whitespace-nowrap',
+                isActive
+                  ? 'text-[#00FF26] border-[#00FF26]'
+                  : 'text-text-muted hover:text-text-primary hover:border-text-muted'
+              )}
+            >
+              <span
+                className={clsx(
+                  'transition-colors duration-200 flex-shrink-0',
+                  isActive ? 'text-[#00FF26]' : 'text-text-muted'
+                )}
+              >
+                {tab.icon}
+              </span>
+              <span>{tab.label}</span>
 
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => navigate(tab.path)}
-                                className={clsx(
-                                    'relative flex items-center gap-3 px-1 py-4 text-sm font-medium transition-all duration-200',
-                                    'border-b-2 whitespace-nowrap',
-                                    isActive
-                                        ? 'text-[#00FF26] border-[#00FF26]'
-                                        : 'text-text-muted border-transparent hover:text-text-primary hover:border-text-muted',
-                                    marginClass
-                                )}
-                            >
-                <span className={clsx(
-                    'transition-colors duration-200',
-                    isActive ? 'text-[#00FF26]' : 'text-text-muted group-hover:text-text-primary'
-                )}>
-                  {tab.icon}
-                </span>
-                                <span>{tab.label}</span>
+              {isActive && (
+                <div className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00FF26] to-[#00e676] animate-fadeIn" />
+              )}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  </div>
+)
 
-                                {/* Анимированный индикатор */}
-                                {isActive && (
-                                    <div
-                                        className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00FF26] to-[#00e676] animate-fadeIn"/>
-                                )}
-                            </button>
-                        )
-                    })}
-                </div>
-            </div>
-        </div>
-    )
 }
