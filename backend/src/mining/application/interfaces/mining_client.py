@@ -2,7 +2,8 @@ import abc
 from typing import List
 
 from src.mining.domain.dtos import StatsHashrateResponseDTO, ChartDataPoint, WorkerDataPoint, WorkerHistoryResponseDTO, \
-    WorkersHistoryAllResponseDTO, ProxiesResponseDTO, CreateProxyDTO, ProxyCreateResponseDTO
+    WorkersHistoryAllResponseDTO, ProxiesResponseDTO, CreateProxyDTO, ProxyCreateResponseDTO, ContactSupportDTO, \
+    ContactSupportResponseDTO
 from src.mining.domain.enum import CurrencyType, TimeType
 
 
@@ -37,4 +38,8 @@ class IMiningApiClient(abc.ABC):
 
     @abc.abstractmethod
     async def update_status_proxy(self, proxy_id: str, status: str) -> str:
+        pass
+
+    @abc.abstractmethod
+    async def send_support_message(self, contact_data: ContactSupportDTO) -> ContactSupportResponseDTO:
         pass

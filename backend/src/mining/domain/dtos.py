@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -148,3 +148,10 @@ class ProxyCreateResponseDTO(BaseModel):
     id: str
     proxy_id: str
 
+class ContactSupportDTO(BaseModel):
+    username: str = Field(..., min_length=1, max_length=100, description="Username of the sender")
+    message: str = Field(..., min_length=5, max_length=500, description="Support message content")
+
+class ContactSupportResponseDTO(BaseModel):
+    message: str = Field(..., description="Response message")
+    status: Literal["success", "error"] = Field(..., description="Response status")

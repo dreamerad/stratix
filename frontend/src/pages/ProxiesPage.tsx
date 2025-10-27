@@ -1,11 +1,14 @@
+import {useState} from 'react'
 import {Navigate} from 'react-router-dom'
 import {DashboardHeader} from '@/features/dashboard/components/Header/DashboardHeader'
 import {Footer, NavigationTabs} from '@/shared/ui'
 import {ProxyList} from '@/features/proxies/components/ProxyList'
+import {ContactModal} from '@/features/proxies/components/ContactModal'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
 
 export function ProxiesPage() {
     const {isAuthenticated, isLoading} = useAuth()
+    const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
     if (isLoading) {
         return (
@@ -43,9 +46,9 @@ export function ProxiesPage() {
                         </div>
                     </div>
 
-                    {/* Contact Link */}
-                    <a
-                        href="mailto:contact@stratix.com"
+                    {/* Contact Button */}
+                    <button
+                        onClick={() => setIsContactModalOpen(true)}
                         className="flex items-center gap-2 px-4 py-2 bg-[#00FF26]/10 hover:bg-[#00FF26]/20 border border-[#00FF26]/30 rounded-lg text-[#00FF26] text-sm font-medium transition-all duration-200 hover:scale-105"
                     >
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +56,7 @@ export function ProxiesPage() {
                             <polyline points="22,6 12,13 2,6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                         Contact us
-                    </a>
+                    </button>
                 </div>
 
                 {/* Список прокси */}
@@ -61,6 +64,12 @@ export function ProxiesPage() {
             </main>
 
             <Footer/>
+
+            {/* Contact Modal */}
+            <ContactModal
+                isOpen={isContactModalOpen}
+                onClose={() => setIsContactModalOpen(false)}
+            />
         </div>
     )
 }

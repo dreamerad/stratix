@@ -1,8 +1,10 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, Query, Body
+
 from src.mining.api.dependencies import AuthTokenDepend, MiningClientDepend
 from src.mining.application.use_cases.chart_hashrate import ChartHashrateUseCase
+from src.mining.application.use_cases.contact_support import ContactSupportUseCase
 from src.mining.application.use_cases.create_proxy import AddProxyUseCase
 from src.mining.application.use_cases.proxies_list import ProxiesListUseCase
 from src.mining.application.use_cases.stats_hashrate import StatsHashrateUseCase
@@ -12,7 +14,7 @@ from src.mining.application.use_cases.workers_history_all import WorkersHistoryA
 from src.mining.application.use_cases.workers_list import WorkersListUseCase
 from src.mining.domain.dtos import StatsHashrateResponseDTO, StatsHashrateQueryDTO, ChartHashrateQueryDTO, \
     ChartDataPoint, WorkersResponseDTO, WorkerHistoryResponseDTO, WorkersHistoryAllResponseDTO, ProxiesResponseDTO, \
-    CreateProxyDTO
+    CreateProxyDTO, ContactSupportDTO, ContactSupportResponseDTO
 from src.mining.domain.enum import CurrencyType
 
 router = APIRouter()
@@ -93,3 +95,12 @@ async def update_proxy_status(
 
 ):
     return await UpdateProxyStatusUseCase(client).execute(proxy_id, status)
+
+
+@router.post("/contact", status_code=200, response_model=ContactSupportResponseDTO)
+async def contact_support(
+        dto: ContactSupportDTO,
+        client: MiningClientDepend,
+        token_data: AuthTokenDepend,
+):
+    return await ContactSupportUseCase(client).execute(dto)
