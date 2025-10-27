@@ -341,8 +341,14 @@ export function ProxyEditModal({isOpen, onClose, proxy}: ProxyEditModalProps) {
                                                         variant="secondary"
                                                         size="sm"
                                                         onClick={() => addFeeToAccount(account.id)}
+                                                                                           leftIcon={
+                                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                                            <path d="M10 4.16667V15.8333M4.16667 10H15.8333" stroke="currentColor"
+                                                  strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                    }
                                                     >
-                                                        Добавить fee
+                                                        Добавить Fee
                                                     </Button>
                                                 </div>
                                             </div>

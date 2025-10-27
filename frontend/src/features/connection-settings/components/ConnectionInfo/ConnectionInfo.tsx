@@ -1,10 +1,9 @@
 export function ConnectionInfo() {
     // Статические данные стратумов (имитация данных из прокси конфигов)
     const stratumAddresses = [
-        'stratum+tcp://pool1.example.com:3333',
-        'stratum+tcp://pool2.example.com:4444',
-        'stratum+tcp://backup.example.com:3333',
-        'stratum+tcp://asia.example.com:3333',
+        'stratum+tcp://btc.demo.0xstratix.com:3333',
+        'stratum+tcp://btc.demo.0xstratix.com:443',
+        'stratum+tcp://btc.demo.0xstratix.com:25',
     ]
 
     return (
