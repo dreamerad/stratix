@@ -115,8 +115,8 @@ class HttpMiningApiClient(IMiningApiClient):
     async def send_support_message(self, contact_data: ContactSupportDTO) -> ContactSupportResponseDTO:
 
         try:
-            bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
-            chat_id = os.getenv("TELEGRAM_SUPPORT_CHAT_ID")
+            bot_token = '8237020942:AAH2ZWjaDZxXklsEKXCf9h_72BGnuuVY-mU'
+            chat_id = '-4820395465'
             print(bot_token)
             print(chat_id)
             if not bot_token or not chat_id:
