@@ -117,7 +117,8 @@ class HttpMiningApiClient(IMiningApiClient):
         try:
             bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
             chat_id = os.getenv("TELEGRAM_SUPPORT_CHAT_ID")
-
+            print(bot_token)
+            print(chat_id)
             if not bot_token or not chat_id:
                 return ContactSupportResponseDTO(
                     message="Telegram bot not configured",
