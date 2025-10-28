@@ -48,8 +48,8 @@ export function WorkerStats() {
         )
     }
 
+    const dnsAddress = '5.187.3.197'
     const demoAddresses = [
-        '5.187.3.197',
         'stratum+tcp://btc.demo.0xstratix.com:3333',
         'stratum+tcp://btc.demo.0xstratix.com:443',
         'stratum+tcp://btc.demo.0xstratix.com:25'
@@ -57,6 +57,7 @@ export function WorkerStats() {
 
     return (
         <div className="bg-[#222222] border border-border rounded-xl p-6 h-full flex flex-col">
+
             {/* Total workers */}
             <div className="mb-6">
                 <h3 className="text-text-white text-sm mb-1 font-semibold">Total workers</h3>
@@ -91,6 +92,23 @@ export function WorkerStats() {
 
                 {/* Нижняя часть — адреса прижаты к низу */}
                 <div className="flex flex-col gap-2 mt-auto">
+                    {/* DNS блок */}
+                    <div className="flex items-center gap-2 text-text-muted text-sm bg-[#1A1A1A] p-3 rounded-lg">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="flex-shrink-0 text-text-muted">
+                            <path d="M10 2L2 7L10 12L18 7L10 2Z" stroke="currentColor" strokeWidth="2"/>
+                            <path d="M2 12L10 17L18 12" stroke="currentColor" strokeWidth="2"/>
+                        </svg>
+                        <span className="text-text-white text-sm flex-1">DNS: {dnsAddress}</span>
+                        <button
+                            onClick={() => copyToClipboard(dnsAddress)}
+                            className="text-xs bg-[#00FF26]/10 text-[#00FF26] px-2 py-1 rounded-md hover:bg-[#00FF26]/20 transition-colors flex items-center gap-1"
+                            title="Copy DNS"
+                        >
+                            {isCopied === dnsAddress ? 'Copied' : 'Copy'}
+                        </button>
+                    </div>
+
+                    {/* Адреса */}
                     {demoAddresses.map((address) => (
                         <div
                             key={address}
