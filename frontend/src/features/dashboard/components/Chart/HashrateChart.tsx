@@ -184,7 +184,7 @@ export function HashrateChart() {
         <div
             className={`bg-[#222222] border border-border rounded-xl p-4 md:p-6 relative overflow-hidden transition-all duration-300 ${
                 isFullscreen ? 'fixed inset-4 z-50 shadow-2xl' : ''
-            }`}>
+            } max-w-[1000px] xl:max-w-[1100px] w-full mx-auto`}>
             {/* Фоновый градиент */}
             <div
                 className="absolute inset-0 bg-gradient-to-br from-[#00FF26]/5 via-transparent to-[#00FF26]/3 pointer-events-none"></div>
@@ -323,8 +323,9 @@ export function HashrateChart() {
 
             {/* График */}
             <div className={`-mx-1 md:-mx-2 relative ${
-                isFullscreen ? 'h-[calc(100vh-250px)]' : 'h-48 sm:h-56 md:h-64'
-            }`}>
+                isFullscreen ? 'h-[calc(100vh-250px)]' : 'h-[300px] lg:h-[400px]'
+            } max-w-[1050px] xl:max-w-[1100px] mx-auto`}>
+
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                         data={data}

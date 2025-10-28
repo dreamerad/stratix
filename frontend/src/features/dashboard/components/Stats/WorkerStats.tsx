@@ -1,9 +1,9 @@
-import { useState } from 'react'
-import { useWorkers } from '@/features/workers/hooks/useWorkers'
+import {useState} from 'react'
+import {useWorkers} from '@/features/workers/hooks/useWorkers'
 
 export function WorkerStats() {
     const [isCopied, setIsCopied] = useState<string | null>(null)
-    const { totalWorkers, activeWorkers, inactiveWorkers, loading } = useWorkers()
+    const {totalWorkers, activeWorkers, inactiveWorkers, loading} = useWorkers()
 
     const copyToClipboard = async (text: string) => {
         try {
@@ -48,7 +48,11 @@ export function WorkerStats() {
         )
     }
 
-    const demoAddresses = ['stratum+tcp://btc.demo.0xstratix.com:3333', 'stratum+tcp://btc.demo.0xstratix.com:443', 'stratum+tcp://btc.demo.0xstratix.com:25']
+    const demoAddresses = [
+        'stratum+tcp://btc.demo.0xstratix.com:3333',
+        'stratum+tcp://btc.demo.0xstratix.com:443',
+        'stratum+tcp://btc.demo.0xstratix.com:25'
+    ]
 
     return (
         <div className="bg-[#222222] border border-border rounded-xl p-6 h-full flex flex-col">
@@ -57,9 +61,6 @@ export function WorkerStats() {
                 <h3 className="text-text-white text-sm mb-1 font-semibold">Total workers</h3>
                 <div className="text-text-primary text-3xl">{totalWorkers}</div>
             </div>
-
-            {/* Divider */}
-            <div className="border-t border-border my-6"></div>
 
             {/* Workers status */}
             <div className="space-y-3 mb-6">
@@ -71,14 +72,24 @@ export function WorkerStats() {
                 </div>
             </div>
 
-            {/* Live DEMO Info */}
-            <div className="mt-auto">
-                <div className="text-text-white text-sm font-semibold mb-2">Live DEMO:</div>
-                <div className="text-text-muted text-sm mb-3">
-                    To try it out, connect your miner to one of these addresses:
+            {/* Верхняя разделительная линия */}
+            <div className="border-t border-border mb-6"></div>
+
+            {/* Live DEMO section */}
+            <div className="flex flex-col justify-between flex-1">
+                {/* Верхняя часть (Live DEMO + описание + разделительная линия) */}
+                <div>
+                    <div className="text-text-white text-sm font-semibold mb-2">Live DEMO:</div>
+                    <div className="text-text-muted text-sm mb-3">
+                        To try it out, connect your miner to one of these addresses or dns:
+                    </div>
+
+                    {/* Разделительная линия под текстом */}
+                    <div className="border-t border-border mb-6"></div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                {/* Нижняя часть — адреса прижаты к низу */}
+                <div className="flex flex-col gap-2 mt-auto">
                     {demoAddresses.map((address) => (
                         <div
                             key={address}
@@ -102,65 +113,17 @@ export function WorkerStats() {
                                 <path fill="#ffb900"
                                       d="M169.08,112.72c-4.23,17.16-30.62,8.45-39.33,6.34L137.4,89c8.45,1.84,35.9,6.07,31.68,23.75Zm-4.76,48.83c-4.75,19-36.42,8.71-46.71,6.07l8.44-33.26c10,2.64,43,7.66,38.27,27.19Zm4.23-83.41,6.07-24.81-15.05-4L153.5,73.66c-4-1.06-7.92-1.85-12.14-2.91l6.07-24.28-15-3.69-6.34,24.81c-3.17-.8-6.6-1.59-9.76-2.12L95.43,60.2l-4,16.1,11.08,2.64c6.07,1.58,7.13,5.54,7.13,8.71l-7.13,28.24c.53.26,1.06.26,1.58.53-.52-.27-1-.27-1.58-.53l-9.77,39.85c-.79,1.85-2.63,4.76-6.86,3.7.27.26-11.08-2.64-11.08-2.64l-7.66,17.42L86.72,179c3.7,1.06,7.13,1.85,10.83,2.91L91.21,207l15.05,3.7,6.33-24.82c4,1.06,8.18,2.12,12.14,3.17l-6.33,24.55,15,3.69,6.34-25.07c25.86,4.75,45.13,2.9,53.31-20.32,6.6-18.74-.26-29.83-14-36.69,10.29-2.11,17.68-8.71,19.79-22.17C201.54,94.51,187.55,84.74,168.55,78.14Z"/>
                             </svg>
-                            {/* Здесь вставь SVG */}
 
-                            {/* Address */}
-                            <span className="text-text-white text-sm flex-1 truncate">
+                            <span className="text-text-white text-sm flex-1 break-all whitespace-normal">
                                 {address}
                             </span>
 
-                            {/* Copy button */}
                             <button
                                 onClick={() => copyToClipboard(address)}
                                 className="text-xs bg-[#00FF26]/10 text-[#00FF26] px-2 py-1 rounded-md hover:bg-[#00FF26]/20 transition-colors flex items-center gap-1"
                                 title="Copy address"
                             >
-                                {isCopied === address ? (
-                                    <>
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M16.6667 5L7.50004 14.1667L3.33337 10"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                        <span className="text-xs text-[#00FF26]">Copied</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M16.6667 7.5H9.16667C8.24619 7.5 7.5 8.24619 7.5 9.16667V16.6667C7.5 17.5871 8.24619 18.3333 9.16667 18.3333H16.6667C17.5871 18.3333 18.3333 17.5871 18.3333 16.6667V9.16667C18.3333 8.24619 17.5871 7.5 16.6667 7.5Z"
-                                                stroke="currentColor"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                            <path
-                                                d="M4.16663 12.5H3.33329C2.89127 12.5 2.46734 12.3244 2.15478 12.0118C1.84222 11.6993 1.66663 11.2754 1.66663 10.8333V3.33333C1.66663 2.89131 1.84222 2.46738 2.15478 2.15482C2.46734 1.84226 2.89127 1.66667 3.33329 1.66667H10.8333C11.2753 1.66667 11.6992 1.84226 12.0118 2.15482C12.3244 2.46738 12.5 2.89131 12.5 3.33333V4.16667"
-                                                stroke="currentColor"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                        Copy
-                                    </>
-                                )}
+                                {isCopied === address ? 'Copied' : 'Copy'}
                             </button>
                         </div>
                     ))}

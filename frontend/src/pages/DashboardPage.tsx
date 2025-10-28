@@ -62,8 +62,8 @@ export function DashboardPage() {
 
             <main className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-6 sm:py-8 md:py-12">
                 {/* График и статистика */}
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-                    <div className="lg:col-span-3">
+                <div className="grid grid-cols-[2fr_1fr] gap-6 mb-6">
+                    <div>
                         <HashrateChart/>
                     </div>
                     <div className="lg:col-span-1">
@@ -79,7 +79,8 @@ export function DashboardPage() {
                 {/* Фильтры воркеров */}
                 <WorkerFilters
                     onSearch={setSearchQuery}
-                    onFeeFilter={() => {}}
+                    onFeeFilter={() => {
+                    }}
                     onStatusFilter={setStatusFilter}
                     onSort={setSortOption}
                 />

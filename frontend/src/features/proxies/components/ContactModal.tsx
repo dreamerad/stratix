@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {AnimatedModal, Button} from '@/shared/ui'
+import {AnimatedModal, Button, useToastHelpers} from '@/shared/ui'
 import {useAuth} from '@/entities/auth/hooks/useAuth'
 import {proxiesApi} from '@/features/proxies/api/proxies'
 
@@ -10,7 +10,8 @@ interface ContactModalProps {
 
 export function ContactModal({isOpen, onClose}: ContactModalProps) {
     const {userData} = useAuth()
-    const [message, setMessage] = useState('')
+    const toast = useToastHelpers()
+    const [message, setMessage] = useState('Hello! I would like to request a new mining pool...')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleSubmit = async () => {
@@ -26,30 +27,37 @@ export function ContactModal({isOpen, onClose}: ContactModalProps) {
                 message: message.trim()
             }
 
-            console.log('Sending contact data:', contactData)
-
             const response = await proxiesApi.sendSupportMessage(contactData)
 
             if (response.status === 'success') {
-                setMessage('')
+                setMessage('Hello! I would like to request a new mining pool...')
                 onClose()
+
+                toast.success(
+                    'Message Sent!',
+                    'Your support message has been sent successfully. We will get back to you soon.'
+                )
 
                 console.log('Message sent successfully:', response.message)
             } else {
                 throw new Error(response.message || 'Failed to send message')
             }
-            setMessage('')
-            onClose()
 
         } catch (error) {
             console.error('Error sending message:', error)
+            const errorMessage = (error as any)?.response?.data?.detail || 'Failed to send message'
+
+            toast.error(
+                'Message Failed',
+                errorMessage
+            )
         } finally {
             setIsSubmitting(false)
         }
     }
 
     const handleClose = () => {
-        setMessage('')
+        setMessage('Hello! I would like to request a new mining pool...')
         onClose()
     }
 
@@ -100,7 +108,7 @@ export function ContactModal({isOpen, onClose}: ContactModalProps) {
                         </label>
                         <textarea
                             onChange={(e) => setMessage(e.target.value)}
-                            value="Hello! I would like to request a new mining pool..."
+                            value={message}
                             rows={6}
                             className="w-full p-4 bg-primary-card border border-border rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-green transition-colors resize-none leading-relaxed"
                         />
