@@ -37,6 +37,10 @@ export function LoginForm({onSwitchToRegister}: LoginFormProps) {
         }
     }
 
+    const fillTestData = () => {
+        setFormData({username: 'admin1', password: 'admin1'})
+    }
+
     return (
         <div className="bg-primary-card border border-border rounded-2xl p-8 shadow-xl">
             {/* Header */}
@@ -49,6 +53,32 @@ export function LoginForm({onSwitchToRegister}: LoginFormProps) {
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-text-primary mb-2">Welcome</h1>
                 <p className="text-text-muted">Sign in to your mining pool account</p>
+            </div>
+
+            {/* Test Credentials */}
+            <div className="bg-accent-green/5 border-2 border-dashed border-accent-green/20 rounded-xl p-4 mb-6">
+                <div className="text-center mb-3">
+                    <p className="text-text-muted text-sm font-medium">Тестовые данные для входа</p>
+                </div>
+                <div className="flex justify-center gap-6 mb-3">
+                    <div className="bg-primary-card border border-border rounded-lg px-3 py-2">
+                        <span className="text-text-muted text-xs">Логин:</span>
+                        <span className="text-accent-green font-mono font-semibold ml-2">admin1</span>
+                    </div>
+                    <div className="bg-primary-card border border-border rounded-lg px-3 py-2">
+                        <span className="text-text-muted text-xs">Пароль:</span>
+                        <span className="text-accent-green font-mono font-semibold ml-2">admin1</span>
+                    </div>
+                </div>
+                <div className="text-center">
+                    <button
+                        type="button"
+                        onClick={fillTestData}
+                        className="text-accent-green hover:text-accent-green-hover text-sm font-medium transition-colors"
+                    >
+                        Заполнить автоматически
+                    </button>
+                </div>
             </div>
 
             {/* Form */}
