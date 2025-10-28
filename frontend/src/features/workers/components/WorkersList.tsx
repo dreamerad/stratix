@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronRight, BarChart3, Settings } from 'lucide-react'
+import { ChevronDown, ChevronRight, BarChart3 } from 'lucide-react'
 import { WorkerSettingsModal } from './WorkerSettingsModal'
 import { WorkerChartModal } from './WorkerChartModal'
 
@@ -41,7 +41,7 @@ export function WorkersList({
   historyLoading = false
 }: WorkersListProps) {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
-  const [selectedWorkerGroup, setSelectedWorkerGroup] = useState<string>('')
+  const [selectedWorkerGroup] = useState<string>('')
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [selectedChartWorker, setSelectedChartWorker] = useState<string>('')
   const [isChartModalOpen, setIsChartModalOpen] = useState(false)
