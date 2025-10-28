@@ -22,7 +22,7 @@ export function ConnectionInfo() {
                             <path d="M10 2L2 7L10 12L18 7L10 2Z" stroke="currentColor" strokeWidth="2"/>
                             <path d="M2 12L10 17L18 12" stroke="currentColor" strokeWidth="2"/>
                         </svg>
-                        <span className="text-text-white font-medium">DNS: 8.8.8.8</span>
+                        <span className="text-text-white font-medium">DNS: 5.187.3.197</span>
                     </div>
                 </div>
 

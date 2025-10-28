@@ -49,6 +49,7 @@ export function WorkerStats() {
     }
 
     const demoAddresses = [
+        '5.187.3.197',
         'stratum+tcp://btc.demo.0xstratix.com:3333',
         'stratum+tcp://btc.demo.0xstratix.com:443',
         'stratum+tcp://btc.demo.0xstratix.com:25'
