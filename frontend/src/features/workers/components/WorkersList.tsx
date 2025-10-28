@@ -210,16 +210,16 @@ export function WorkersList({
               {/* Кнопки управления */}
               <div className="flex items-center gap-2">
                 {/* Кнопка настроек */}
-                <button
-                  className="p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setSelectedWorkerGroup(group.name)
-                    setIsSettingsModalOpen(true)
-                  }}
-                >
-                  <Settings className="h-4 w-4" />
-                </button>
+                {/*<button*/}
+                {/*  className="p-2 text-text-muted hover:text-accent-primary hover:bg-hover-bg rounded-lg transition-colors"*/}
+                {/*  onClick={(e) => {*/}
+                {/*    e.stopPropagation()*/}
+                {/*    setSelectedWorkerGroup(group.name)*/}
+                {/*    setIsSettingsModalOpen(true)*/}
+                {/*  }}*/}
+                {/*>*/}
+                {/*  <Settings className="h-4 w-4" />*/}
+                {/*</button>*/}
 
                 {/* Кнопка графика группы */}
                 <button
