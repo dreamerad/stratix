@@ -14,7 +14,7 @@ type TimeRange = 1 | 6 | 24 | 48 | 168
 
 export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false }: WorkerChartModalProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [showBrush, setShowBrush] = useState(false)
+  const [showBrush] = useState(false)
 
   const [chartSettings] = useState({
     showGrid: true,
