@@ -93,7 +93,7 @@ export function WorkerStats() {
                 {/* Нижняя часть — адреса прижаты к низу */}
                 <div className="flex flex-col gap-2 mt-auto">
                     {/* DNS блок */}
-                    <div className="flex items-center gap-2 text-text-muted text-sm bg-[#1A1A1A] p-3 rounded-lg">
+                    <div className="flex items-center mb-4 gap-2 text-text-muted text-sm bg-[#1A1A1A] p-3 rounded-lg">
                         <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="flex-shrink-0 text-text-muted">
                             <path d="M10 2L2 7L10 12L18 7L10 2Z" stroke="currentColor" strokeWidth="2"/>
                             <path d="M2 12L10 17L18 12" stroke="currentColor" strokeWidth="2"/>

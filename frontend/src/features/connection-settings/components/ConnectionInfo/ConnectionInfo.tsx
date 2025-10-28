@@ -42,8 +42,7 @@ export function ConnectionInfo() {
                 {/* Title with DNS */}
                 <div className="mb-6">
                     <h3 className="text-text-white text-sm mb-1 font-semibold">Connection Settings</h3>
-                    <div className="text-text-muted text-sm mb-3">Available mining pool endpoints and DNS
-                        configuration
+                    <div className="text-text-muted text-sm mb-3">Connect your miner to one of these addresses or dns:
                     </div>
 
                     {/* DNS Info */}

@@ -26,7 +26,6 @@ export function Button({
         'transition-all duration-200 ease-out',
         'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary-bg',
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
-        'transform hover:-translate-y-0.5 active:translate-y-0',
         'relative overflow-hidden'
     ]
 
