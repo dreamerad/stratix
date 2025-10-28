@@ -61,12 +61,12 @@ export function DashboardPage() {
             <NavigationTabs />
 
             <main className="px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32 py-6 sm:py-8 md:py-12">
-                {/* График и статистика */}
-                <div className="grid grid-cols-[2fr_1fr] gap-6 mb-6">
-                    <div>
+                {/* График и статистика - адаптивная сетка */}
+                <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-6">
+                    <div className="w-full">
                         <HashrateChart/>
                     </div>
-                    <div className="lg:col-span-1">
+                    <div className="w-full">
                         <WorkerStats/>
                     </div>
                 </div>
