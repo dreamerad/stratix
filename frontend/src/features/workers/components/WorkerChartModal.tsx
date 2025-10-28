@@ -15,11 +15,8 @@ type TimeRange = 1 | 6 | 24 | 48 | 168
 export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false }: WorkerChartModalProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [showBrush, setShowBrush] = useState(false)
-  // const [zoomDomain, setZoomDomain] = useState<{startIndex?: number, endIndex?: number}>({})
-  // const [showSettings, setShowSettings] = useState(false)
-  // const [hoveredPoint, setHoveredPoint] = useState<number | null>(null)
 
-  const [chartSettings, setChartSettings] = useState({
+  const [chartSettings] = useState({
     showGrid: true,
     showArea: !isGroup,
     lineThickness: 2.5,
@@ -70,32 +67,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
   ]
 
   const toggleFullscreen = () => setIsFullscreen(!isFullscreen)
-  const resetZoom = () => {
-    // setZoomDomain({})
-    setShowBrush(false)
-  }
-  // const enableZoom = () => setShowBrush(true)
-  //
-  // const exportChart = () => {
-  //   const exportData = {
-  //     workerName,
-  //     isGroup,
-  //     currency,
-  //     timeRange: selectedTimeRange,
-  //     timestamp: new Date().toISOString(),
-  //     data: chartData
-  //   }
-
-  //   const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-  //     type: 'application/json'
-  //   })
-  //   const url = URL.createObjectURL(blob)
-  //   const a = document.createElement('a')
-  //   a.href = url
-  //   a.download = `worker-${workerName}-${selectedTimeRange}h-${new Date().getTime()}.json`
-  //   a.click()
-  //   URL.revokeObjectURL(url)
-  // }
 
   const chartData = useMemo(() => {
     if (isGroup) {
@@ -172,39 +143,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
     return null
   }
 
-  const CustomDot = (props: any) => {
-    const { cx, cy, payload, stroke } = props
-    if (!payload) return null
-
-    return (
-      <g>
-        <circle
-          cx={cx}
-          cy={cy}
-          r={6}
-          fill={stroke}
-          opacity={0.1}
-          className="animate-pulse"
-        />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={3}
-          fill={stroke}
-          stroke="#1a1a1a"
-          strokeWidth={2}
-        />
-        <circle
-          cx={cx}
-          cy={cy}
-          r={1}
-          fill="#ffffff"
-          opacity={0.8}
-        />
-      </g>
-    )
-  }
-
   if (!isOpen) return null
 
   return (
@@ -229,30 +167,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
 
               {/* Кнопки управления */}
               <div className="flex items-center gap-2">
-                {/*<button*/}
-                {/*  onClick={() => setShowSettings(!showSettings)}*/}
-                {/*  className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
-                {/*  title="Настройки"*/}
-                {/*>*/}
-                {/*  <Settings className="h-4 w-4" />*/}
-                {/*</button>*/}
-
-                {/*<button*/}
-                {/*  onClick={showBrush ? resetZoom : enableZoom}*/}
-                {/*  className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
-                {/*  title={showBrush ? "Сбросить зум" : "Включить зум"}*/}
-                {/*>*/}
-                {/*  {showBrush ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}*/}
-                {/*</button>*/}
-
-                {/*<button*/}
-                {/*  onClick={exportChart}*/}
-                {/*  className="p-2 text-gray-400 hover:text-[#00FF26] hover:bg-[#00FF26]/10 rounded-lg transition-all duration-200"*/}
-                {/*  title="Экспорт данных"*/}
-                {/*>*/}
-                {/*  <Download className="h-4 w-4" />*/}
-                {/*</button>*/}
-
                 <button
                   onClick={onClose}
                   className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all duration-200"
@@ -283,46 +197,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
           </div>
         </div>
 
-        {/* Панель настроек */}
-        {/*{showSettings && (*/}
-        {/*  <div className="p-4 bg-[#0f0f0f] border-b border-gray-600 animate-slideDown">*/}
-        {/*    <h4 className="text-sm font-medium text-white mb-3">Настройки графика</h4>*/}
-        {/*    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">*/}
-        {/*      <label className="flex items-center gap-2 text-sm text-gray-300">*/}
-        {/*        <input*/}
-        {/*          type="checkbox"*/}
-        {/*          checked={chartSettings.showGrid}*/}
-        {/*          onChange={(e) => setChartSettings(prev => ({ ...prev, showGrid: e.target.checked }))}*/}
-        {/*          className="w-4 h-4 accent-[#00FF26]"*/}
-        {/*        />*/}
-        {/*        Показать сетку*/}
-        {/*      </label>*/}
-
-        {/*      <label className="flex items-center gap-2 text-sm text-gray-300">*/}
-        {/*        <input*/}
-        {/*          type="checkbox"*/}
-        {/*          checked={chartSettings.showArea}*/}
-        {/*          onChange={(e) => setChartSettings(prev => ({ ...prev, showArea: e.target.checked }))}*/}
-        {/*          className="w-4 h-4 accent-[#00FF26]"*/}
-        {/*        />*/}
-        {/*        Заливка области*/}
-        {/*      </label>*/}
-
-        {/*      <label className="flex items-center gap-2 text-sm text-gray-300">*/}
-        {/*        <input*/}
-        {/*          type="checkbox"*/}
-        {/*          checked={chartSettings.showAnimation}*/}
-        {/*          onChange={(e) => setChartSettings(prev => ({ ...prev, showAnimation: e.target.checked }))}*/}
-        {/*          className="w-4 h-4 accent-[#00FF26]"*/}
-        {/*        />*/}
-        {/*        Анимации*/}
-        {/*      </label>*/}
-
-
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*)}*/}
-
         {/* Chart */}
         <div className={`p-6 ${isFullscreen ? 'h-[calc(100vh-200px)]' : 'h-[450px]'}`}>
           {loading ? (
@@ -342,12 +216,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                 <AreaChart
                   data={chartData}
                   margin={{ top: 10, right: 30, left: 20, bottom: showBrush ? 80 : 60 }}
-                  // onMouseMove={(e) => {
-                  //   if (e && e.activeTooltipIndex !== undefined) {
-                  //     setHoveredPoint(e.activeTooltipIndex)
-                  //   }
-                  // }}
-                  // onMouseLeave={() => setHoveredPoint(null)}
                 >
                   <defs>
                     <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
@@ -403,7 +271,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                     strokeWidth={chartSettings.lineThickness}
                     fill="url(#areaGradient)"
                     dot={false}
-                    // activeDot={<CustomDot stroke="#00FF26" />}
                     filter={chartSettings.showAnimation ? "url(#glow)" : undefined}
                     animationDuration={chartSettings.showAnimation ? 1000 : 0}
                   />
@@ -415,14 +282,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                       stroke="#00FF26"
                       fill="rgba(0, 255, 38, 0.1)"
                       tickFormatter={formatTimestamp}
-                      onChange={(brushData) => {
-                        // if (brushData) {
-                        //   setZoomDomain({
-                        //     startIndex: brushData.startIndex,
-                        //     endIndex: brushData.endIndex
-                        //   })
-                        // }
-                      }}
                     />
                   )}
 
@@ -432,12 +291,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                 <LineChart
                   data={chartData}
                   margin={{ top: 10, right: 30, left: 20, bottom: showBrush ? 80 : 60 }}
-                  // onMouseMove={(e) => {
-                  //   if (e && e.activeTooltipIndex !== undefined) {
-                  //     setHoveredPoint(e.activeTooltipIndex)
-                  //   }
-                  // }}
-                  // onMouseLeave={() => setHoveredPoint(null)}
                 >
                   {chartSettings.showGrid && (
                     <CartesianGrid
@@ -489,7 +342,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                         strokeWidth={chartSettings.lineThickness}
                         dot={false}
                         name={worker}
-                        // activeDot={<CustomDot stroke={getWorkerColor(index)} />}
                         animationDuration={chartSettings.showAnimation ? 1000 : 0}
                       />
                     ))
@@ -501,7 +353,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                       strokeWidth={chartSettings.lineThickness}
                       dot={false}
                       name={`Хешрейт воркера ${workerName}`}
-                      // activeDot={<CustomDot stroke="#00FF26" />}
                       animationDuration={chartSettings.showAnimation ? 1000 : 0}
                     />
                   )}
@@ -513,14 +364,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
                       stroke="#00FF26"
                       fill="rgba(0, 255, 38, 0.1)"
                       tickFormatter={formatTimestamp}
-                      onChange={(brushData) => {
-                        // if (brushData) {
-                        //   setZoomDomain({
-                        //     startIndex: brushData.startIndex,
-                        //     endIndex: brushData.endIndex
-                        //   })
-                        // }
-                      }}
                     />
                   )}
                 </LineChart>
@@ -528,32 +371,6 @@ export function WorkerChartModal({ isOpen, onClose, workerName, isGroup = false 
             </ResponsiveContainer>
           )}
         </div>
-
-        {/* Статистика внизу */}
-        {/*<div className="flex items-center justify-between px-6 py-4 border-t border-gray-600/30 bg-[#0f0f0f]/50">*/}
-          {/*<div className="flex items-center gap-4 text-xs text-gray-400">*/}
-            {/*<span className="flex items-center gap-1">*/}
-            {/*  <div className="w-2 h-2 rounded-full bg-[#00FF26]"></div>*/}
-            {/*  {isGroup ? `${groupWorkers.length} воркеров` : 'Хешрейт'}*/}
-            {/*</span>*/}
-            {/*{chartData.length > 0 && (*/}
-            {/*  <span>*/}
-            {/*    {chartData.length} точек данных*/}
-            {/*  </span>*/}
-            {/*)}*/}
-          {/*  {showBrush && zoomDomain.startIndex !== undefined && (*/}
-          {/*    <span className="text-[#00FF26]">*/}
-          {/*      Зум активен ({zoomDomain.startIndex}-{zoomDomain.endIndex})*/}
-          {/*    </span>*/}
-          {/*  )}*/}
-          {/*</div>*/}
-
-        {/*  {hoveredPoint !== null && (*/}
-        {/*    <div className="text-xs text-gray-400">*/}
-        {/*      Точка {hoveredPoint + 1} из {chartData.length}*/}
-        {/*    </div>*/}
-        {/*  )}*/}
-        {/*</div>*/}
 
         {/* Overlay для полноэкранного режима */}
         {isFullscreen && (
